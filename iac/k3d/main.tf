@@ -105,7 +105,7 @@ resource "kubernetes_namespace" "gateway" {
   }
 }
 
-resource "kubernetes_namespace" "gateway" {
+resource "kubernetes_namespace" "serving" {
   metadata {
     name = "serving"
   }
