@@ -22,3 +22,8 @@
 
 ## [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 - `terraform version`
+
+## Install Argocd CLI
+
+- `sudo curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64`
+- `sudo chmod +x /usr/local/bin/argocd`
