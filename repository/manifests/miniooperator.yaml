@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: "https://github.com/vsvale/k8s_example.git"
-    path: repository/helm-charts/deepstorage/operator
+    path: repository/helm-charts/operator
     targetRevision: HEAD
     helm:
       valueFiles:
