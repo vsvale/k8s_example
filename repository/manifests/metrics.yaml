@@ -1,17 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kafka-connect
+  name: metrics-ingestion
   namespace: cicd
 spec:
   project: default
   source:
-    repoURL: "https://github.com/vsvale/kappa_k8s_config.git"
-    path: repository/yamls/ingestion/kafka-connect/
+    repoURL: "https://github.com/vsvale/k8s_example.git"
+    path: repository/yamls/ingestion/metrics
     targetRevision: HEAD
-    directory:
-      recurse: true
-      jsonnet: {}
   destination:
     server: "https://kubernetes.default.svc"
     namespace: ingestion

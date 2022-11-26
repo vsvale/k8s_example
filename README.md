@@ -21,3 +21,12 @@
 - user: admin
 - password: `kubectl -n cicd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d  | more`
 
+## Kafka
+- Strimzi via helm-chart com default values
+- metricas para promoetheus
+- 3 Broker ephemeral Kafka 3.2.3
+- Kafka connect com a image mateushenrique/owshq-kafka-connect-strimzi:3.2.3
+- Schema registry 6.1.0
+- Cruise control (necessario 3 brokers)
+- Kafka Connectors em repository/yamls/ingestion/connectors
+

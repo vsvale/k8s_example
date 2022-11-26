@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: schema-registry
+  name: cruise-control
   namespace: cicd
 spec:
   project: default
   source:
-    repoURL: "https://github.com/vsvale/kappa_k8s_config.git"
-    path: repository/helm-charts/ingestion/cp-schema-registry
+    repoURL: "https://github.com/vsvale/k8s_example.git"
+    path: repository/yamls/ingestion/cruise-control/
     targetRevision: HEAD
-    helm:
-      valueFiles:
-        - values-development.yaml
+    directory:
+      recurse: true
+      jsonnet: {}
   destination:
     server: "https://kubernetes.default.svc"
     namespace: ingestion
