@@ -10,3 +10,7 @@
   - port-foward 80 para 8081
 
 ## Create Namespace
+- `cd ./iac/k3d && terraform init && terraform plan && terraform apply -auto-approve && cd ../.. && kubectl get ns`
+
+## Argo CD
+- 
