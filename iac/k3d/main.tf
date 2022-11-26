@@ -1,5 +1,5 @@
 provider "kubernetes" {
-  config_context_cluster = "k3d-kappa"
+  config_context_cluster = "k3d-k8sexample"
   config_path            = "~/.kube/config"
 }
 
