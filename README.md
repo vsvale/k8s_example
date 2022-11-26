@@ -14,6 +14,6 @@
 
 ## Argo CD
 - `helm upgrade --install -f https://raw.githubusercontent.com/vsvale/k8s_example/main/repository/helm-charts/argo-cd/values.yaml argocd argo/argo-cd --namespace cicd --debug --timeout 10m0s`
-- Alterado o values para usar ingress
+- Alterado o values para usar ingress (params.server.insecure: true,params.server.rootpath: '/argocd')
 - kubectl apply -f https://raw.githubusercontent.com/vsvale/k8s_example/main/example.yaml
 - [http://127.0.0.1:8081/argocd/login](http://127.0.0.1:8081/argocd/login)

@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: "https://github.com/vsvale/k8s_example.git"
-    path: repository/yamls
+    path: repository/yamls/svc_lb_crb
     targetRevision: HEAD
     # directory
     directory:
