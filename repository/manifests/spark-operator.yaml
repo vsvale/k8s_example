@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spark-operator
+  namespace: cicd
+spec:
+  project: default
+  source:
+    repoURL: "https://github.com/vsvale/kappa_k8s_config.git"
+    path: repository/helm-charts/spark-operator
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: processing
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
