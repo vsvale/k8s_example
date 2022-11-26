@@ -29,4 +29,16 @@
 - Schema registry 6.1.0
 - Cruise control (necessario 3 brokers)
 - Kafka Connectors em repository/yamls/ingestion/connectors
+- Caso de falha aguarde o kafka-broker-ephemeral
 
+## MiniO
+- Utilizando o helm chart minio/operator com valores default
+  
+
+## Spark
+
+## YugabyteDB
+
+## Airflow
+
+## Example
