@@ -49,11 +49,11 @@ spec:
     #config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
   resources:
     requests:
-      memory: 250mi
-      cpu: 250m
+      memory: 250m
+      cpu: 250mi
     limits:
-      memory: 500mi
-      cpu: 500m
+      memory: 500m
+      cpu: 500mi
   metricsConfig:
     type: jmxPrometheusExporter
     valueFrom:
