@@ -64,11 +64,11 @@ spec:
 #                      - nosql
     resources:
       requests:
-        memory: 512Mi
-        cpu: "500m"
+        memory: 250Mi
+        cpu: "250m"
       limits:
-        memory: 1Gi
-        cpu: "1000m"
+        memory: 500Mi
+        cpu: "500m"
     metricsConfig:
       type: jmxPrometheusExporter
       valueFrom:
@@ -81,10 +81,10 @@ spec:
       type: ephemeral
     resources:
       requests:
-        memory: 512Mi
+        memory: 250Mi
         cpu: "250m"
       limits:
-        memory: 1Gi
+        memory: 500Mi
         cpu: "500m"
     metricsConfig:
       type: jmxPrometheusExporter
