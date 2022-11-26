@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: yugabytedb
+  namespace: cicd
+spec:
+  project: default
+  source:
+    repoURL: "https://github.com/vsvale/k8s_example.git"
+    path: repository/helm-charts/yugabyte
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - expose-all.yaml
+        - values.yaml
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: database
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
