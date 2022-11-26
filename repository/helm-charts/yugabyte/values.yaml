@@ -386,7 +386,7 @@ authCredentials:
   ysql:
     user: "plumber"
     password: "PlumberSDE"
-    database: "owshq"
+    database: "salesdw"
   ycql:
     user: ""
     password: ""
