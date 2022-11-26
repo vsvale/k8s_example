@@ -33,9 +33,16 @@
 
 ## MiniO
 - Utilizando o helm chart minio/operator com valores default
-  
+- loadbalancer para a UI (9089) do minio e para a API (8686)
+- 172.19.0.2:9089
+- JWT: `kubectl get secret console-sa-secret -o jsonpath="{.data.token}" -n deepstorage| base64 --decode`
+- create tenant com TLS disable
+- download credentials
+- create landing and lakehouse buckets
 
 ## Spark
+- Utilizando spark operator com valores default
+- crb para o spark operator
 
 ## YugabyteDB
 
