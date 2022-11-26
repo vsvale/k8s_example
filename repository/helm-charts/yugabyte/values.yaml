@@ -22,17 +22,17 @@ resource:
   master:
     requests:
       cpu: 500m
-      memory: 1Gi
+      memory: 500mi
     limits:
       cpu: 1000m
-      memory: 2Gi
+      memory: 1Gi
   tserver:
     requests:
       cpu: 500m
-      memory: 3Gi
+      memory: 500Mi
     limits:
       cpu: 1000m
-      memory: 4Gi
+      memory: 1Gi
 
 replicas:
   master: 2

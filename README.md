@@ -45,6 +45,13 @@
 - crb para o spark operator
 
 ## YugabyteDB
+- Utilizando yugabytedb helm chart personalizando user e database:  
+```authCredentials:
+  ysql:
+    user: "plumber"
+    password: "PlumberSDE"
+    database: "salesdw"
+```
 
 ## Airflow
 
