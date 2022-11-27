@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: "https://github.com/vsvale/k8s_example.git"
-    path: repository/helm-charts/ingestion/cp-schema-registry
+    path: repository/helm-charts/cp-schema-registry
     targetRevision: HEAD
     helm:
       valueFiles:
