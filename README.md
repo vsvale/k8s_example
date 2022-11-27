@@ -52,7 +52,11 @@
     password: "PlumberSDE"
     database: "salesdw"
 ```
-
 ## Airflow
+- Utilizando helm chart personalizando:
+  - imagem: vsvale/vsvale-airflow:2.4.1 [more info](code/airflow)
+  - utilizando o Yugabytedb como banco destino
 
 ## Example
+- crie as tabelas do DW no YugabyteDB
+- 
