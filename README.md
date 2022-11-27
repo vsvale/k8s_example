@@ -55,7 +55,8 @@
 ## Airflow
 - Utilizando helm chart personalizando:
   - imagem: vsvale/vsvale-airflow:2.4.1 [more info](code/airflow)
-  - utilizando o Yugabytedb como banco destino
+  - Yugabytedb como banco destino
+  - gitsync para https://github.com/vsvale/k8s_example.git
 
 ## Example
 - crie as tabelas do DW no YugabyteDB
