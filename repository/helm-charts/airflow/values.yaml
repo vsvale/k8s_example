@@ -347,12 +347,12 @@ data:
 
   # Otherwise pass connection values in
   metadataConnection:
-    user: plumber
-    pass: PlumberSDE
+    user: postgres
+    pass: postgres
     protocol: postgresql
-    host: 172.19.0.2
-    port: 5433
-    db: airflow
+    host: ~
+    port: 5432
+    db: postgres
     sslmode: disable
   # resultBackendConnection defaults to the same database as metadataConnection
   resultBackendConnection: ~
@@ -437,7 +437,7 @@ kerberos:
 # Airflow Worker Config
 workers:
   # Number of airflow celery workers in StatefulSet
-  replicas: 1
+  replicas: 3
   # Max number of old replicasets to retain
   revisionHistoryLimit: ~
 
@@ -542,13 +542,13 @@ workers:
     #   cpu: 100m
     #   memory: 128Mi
 
-  resources: {}
-  #  limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  #  requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    limits:
+     cpu: 1
+     memory: 3Gi
+    requests:
+     cpu: 1
+     memory: 1Gi
 
   # Grace period for tasks to finish after SIGTERM is sent from kubernetes
   terminationGracePeriodSeconds: 600
@@ -624,7 +624,7 @@ scheduler:
   # scheduler and let Kubernetes restart it
   livenessProbe:
     initialDelaySeconds: 10
-    timeoutSeconds: 20
+    timeoutSeconds: 10
     failureThreshold: 5
     periodSeconds: 60
     command: ~
@@ -938,11 +938,11 @@ webserver:
 
   resources:
      limits:
-       cpu: 2000m
-       memory: 1Gi
-     requests:
        cpu: 1000m
-       memory: 500Mi
+       memory: 1500Mi
+     requests:
+       cpu: 500m
+       memory: 1000Mi
 
   # Create initial user.
   defaultUser:
@@ -1028,7 +1028,7 @@ webserver:
 
 # Airflow Triggerer Config
 triggerer:
-  enabled: true
+  enabled: false
   # Number of airflow triggerers in the deployment
   replicas: 1
   # Max number of old replicasets to retain
@@ -1049,7 +1049,7 @@ triggerer:
   # triggerer and let Kubernetes restart it
   livenessProbe:
     initialDelaySeconds: 10
-    timeoutSeconds: 20
+    timeoutSeconds: 10
     failureThreshold: 5
     periodSeconds: 60
     command: ~
@@ -1654,7 +1654,7 @@ cleanup:
 # Configuration for postgresql subchart
 # Not recommended for production
 postgresql:
-  enabled: false
+  enabled: true
   postgresqlPassword: postgres
   postgresqlUsername: postgres
 
