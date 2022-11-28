@@ -65,6 +65,10 @@
   - MiniO Connection: {"aws_access_key_id": "YOURACCESSKEY", "aws_secret_access_key": "YOURSECRETKEY", "host": "http://172.18.0.2:8686"}
   - YugabyteDB Connection: {"name": "yugabytedb_ysql", "host": "yb-tservers.database.svc.cluster.local", "schema": "salesdw", "login": "plumber", "password": "PlumberSDE", "port": "5433"}
 
+## Lenses
+- opcional, apenas para facilitar a visualização dos tópicos kafka
+- porta 3030
+
 ## Example
 - O estudo de caso utiliza a AdventureWorksLT como source dos dados. Esses dados serão utilizados para alimentar algumas tabelas no DW presente no YugabyteDB.
 - O nome do banco de origem é o sampledb, um sqlserver que não contém o CDC habilitado:
@@ -82,3 +86,9 @@
 
 - dimproduct, dimproductcategory, factinternetsales, dimcustomer, dimgeografy terão seus dados oriundos do banco OLTP sampledb
 - dimproductsubcategory, dimdate, dimpromotion, dimcurrency, factinternetsalesreason, dimsalesterritory terão seus dados disponibilizados em [csv](code/minio) no bucket landing no minio
+
+### From sampledb to Kafka
+![fromsampledbtokafka](imgs/fromsampledbtokafka.png)
+- Através fo Kafka Connect JDBC extrairemos os dados do sampledb e disponibilizaremos no Kafka, como utiliza uma chave e um timestamp será possível identificar inserts e updates
+- Os connectors source estão disponíveis em [repository/yamls/ingestion/connectors/src](repository/yamls/ingestion/connectors/src)
+
