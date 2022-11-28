@@ -1,0 +1,187 @@
+﻿1,AFN,Afghani
+2,DZD,Algerian Dinar
+3,ARS,Argentine Peso
+4,AMD,Armenian Dram
+5,AWG,Aruban Guilder
+6,AUD,Australian Dollar
+7,AZN,Azerbaijanian Manat
+8,BSD,Bahamian Dollar
+9,BHD,Bahraini Dinar
+10,THB,Baht
+11,PAB,Balboa
+12,BBD,Barbados Dollar
+13,BEF,Belgian Franc
+14,VEB,Bolivar
+15,BOB,Boliviano
+16,BRL,Brazilian Real
+17,BND,Brunei Dollar
+18,BGN,Bulgarian Lev
+19,CAD,Canadian Dollar
+20,GHC,Cedi
+21,XOF,CFA Franc BCEAO
+22,CLP,Chilean Peso
+23,COP,Colombian Peso
+24,CRC,Costa Rican Colon
+25,HRK,Croatian Kuna
+26,CYP,Cyprus Pound
+27,CZK,Czech Koruna
+28,DKK,Danish Krone
+29,DEM,Deutsche Mark
+30,DOP,Dominican Peso
+31,VND,Dong
+32,GRD,Drachma
+33,EGP,Egyptian Pound
+34,SVC,El Salvador Colon
+35,AED,Emirati Dirham
+36,EUR,EURO
+37,FJD,Fiji Dollar
+38,HUF,Forint
+39,FRF,French Franc
+40,PYG,Guarani
+41,HKD,Hong Kong Dollar
+42,ISK,Iceland Krona
+43,INR,Indian Rupee
+44,IEP,Irish Pound
+45,ITL,Italian Lira
+46,JMD,Jamaican Dollar
+47,JOD,Jordanian Dinar
+48,KES,Kenyan Shilling
+49,EEK,Kroon
+50,KWD,Kuwaiti Dinar
+51,AOA,Kwanza
+52,LVL,Latvian Lats
+53,LBP,Lebanese Pound
+54,ALL,Lek
+55,ROL,Leu
+56,LTL,Lithuanian Litas
+57,MYR,Malaysian Ringgit
+58,MTL,Maltese Lira
+59,FIM,Markka
+60,MUR,Mauritius Rupee
+61,MXN,Mexican Peso
+62,MAD,Moroccan Dirham
+63,NGN,Naira
+64,NAD,Namibia Dollar
+65,NPR,Nepalese Rupee
+66,ANG,Netherlands Antillian Guilder
+67,NLG,Netherlands Guilder
+68,ILS,New Israeli Shekel
+69,TWD,New Taiwan Dollar
+70,NZD,New Zealand Dollar
+71,BTN,Ngultrum
+72,NOK,Norwegian Krone
+73,PEN,Nuevo Sol
+74,OMR,Omani Rial
+75,PKR,Pakistan Rupee
+76,PHP,Philippine Peso
+77,PLZ,Polish Zloty(old)
+78,PTE,Portuguese Escudo
+79,GTQ,Quetzal
+80,ZAR,Rand
+81,MVR,Rufiyaa
+82,IDR,Rupiah
+83,RUB,Russian Ruble
+84,RUR,Russian Ruble(old)
+85,SAR,Saudi Riyal
+86,ATS,Shilling
+87,SGD,Singapore Dollar
+88,SKK,Slovak Koruna
+89,ESP,Spanish Peseta
+90,LKR,Sri Lankan Rupee
+91,SEK,Swedish Krona
+92,CHF,Swiss Franc
+93,BDT,Taka
+94,SIT,Tolar
+95,TTD,Trinidad and Tobago Dollar
+96,TND,Tunisian Dinar
+97,TRL,Turkish Lira
+98,GBP,United Kingdom Pound
+99,UYU,Uruguayan Peso
+100,USD,US Dollar
+101,KRW,Won
+102,JPY,Yen
+103,CNY,Yuan Renminbi
+104,ZWD,Zimbabwe Dollar
+105,PLN,Zloty
+106,BAM,Bosnia and Herzegovina convertible mark
+107,BIF,Burundian franc
+108,BMD,Bermudian dollar
+109,BWP,Botswana pula
+110,BYN,Belarusian rubel
+111,BZD,Belize dollar
+112,CDF,Congolese franc
+113,CKD,Cook Islands dollar
+114,CUP,Cuban peso
+115,CVE,Cape Verdean escudo
+116,DJF,Djiboutian franc
+117,ERN,Eritrean nakfa
+118,ETB,Ethiopian birr
+119,FKP,Falkland Islands pound
+120,FOK,Faroese króna
+121,GEL,Georgian lari
+122,GGP,Guernsey pound
+123,GHS,Ghanaian cedi
+124,GIP,Gibraltar pound
+125,GMD,Gambian dalasi
+126,GNF,Guinean franc
+127,GYD,Guyanese dollar
+128,HNL,Honduran lempira
+129,HTG,Haitian gourde
+130,IMP,Manx pound
+131,IQD,Iraqi dinar
+132,IRR,Iranian rial
+133,JEP,Jersey pound
+134,KGS,Kyrgyz som
+135,KHR,Cambodian riel
+136,KID,Kiribati dollar
+137,KMF,Comorian franc
+138,KPW,North Korean won
+139,KYD,Cayman Islands dollar
+140,KZT,Kazakhstani tenge
+141,LAK,Lao kip
+142,LRD,Liberian dollar
+143,LSL,Lesotho loti
+144,LYD,Libyan dinar
+145,MDL,Moldovan leu
+146,MGA,Malagasy ariary
+147,MKD,Macedonian denar
+148,MMK,Burmese kyat
+149,MNT,Mongolian tögrög
+150,MOP,Macanese pataca
+151,MRU,Mauritanian ouguiya
+152,MWK,Malawian kwacha
+153,MZN,Mozambican metical
+154,NIO,Nicaraguan córdoba
+155,PGK,Papua New Guinean kina
+156,QAR,Qatari riyal
+157,RON,Romanian leu
+158,RSD,Serbian dinar
+159,RWF,Rwandan franc
+160,SBD,Solomon Islands dollar
+161,SCR,Seychellois rupee
+162,SDG,Sudanese pound
+163,SHP,Saint Helena pound
+164,SLE,Sierra Leonean leone
+165,SOS,Somali shilling
+166,SRD,Surinamese dollar
+167,SSP,South Sudanese pound
+168,STN,São Tomé and Príncipe dobra
+169,SYP,Syrian pound
+170,SZL,Swazi lilangeni
+171,TJS,Tajikistani somoni
+172,TMT,Turkmenistani manat
+173,TOP,Tongan paʻanga
+174,TRY,Turkish lira
+175,TVD,Tuvaluan dollar
+176,TZS,Tanzanian shilling
+177,UAH,Ukrainian hryvnia
+178,UGX,Ugandan shilling
+179,UZS,Uzbekistani soum
+180,VUV,Vanuatu vatu
+181,WST,Samoan tālā
+182,XAF,Central African CFA franc
+183,XCD,Eastern Caribbean dollar
+184,XPF,CFP franc
+185,YER,Yemeni rial
+186,ZMW,Zambian kwacha
+187,ZWL,RTGS dollar
