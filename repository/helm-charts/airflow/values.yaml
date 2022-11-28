@@ -347,12 +347,12 @@ data:
 
   # Otherwise pass connection values in
   metadataConnection:
-    user: postgres
-    pass: postgres
+    user: plumber
+    pass: PlumberSDE
     protocol: postgresql
-    host: ~
+    host: postgres-postgresql.database.svc.cluster.local
     port: 5432
-    db: postgres
+    db: owshq
     sslmode: disable
   # resultBackendConnection defaults to the same database as metadataConnection
   resultBackendConnection: ~
@@ -1654,7 +1654,7 @@ cleanup:
 # Configuration for postgresql subchart
 # Not recommended for production
 postgresql:
-  enabled: true
+  enabled: false
   postgresqlPassword: postgres
   postgresqlUsername: postgres
 
