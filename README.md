@@ -71,6 +71,8 @@
 - opcional, apenas para facilitar a visualização dos tópicos kafka
 - porta 3030
 - Necessario substituir a license no values
+- admin
+- admin
 
 ## Example
 - O estudo de caso utiliza a AdventureWorksLT como source dos dados. Esses dados serão utilizados para alimentar algumas tabelas no DW presente no YugabyteDB.
