@@ -55,7 +55,7 @@
     database: "salesdw"
 ```
 ## Postgres
-- 
+- banco de metadados para o Lenses e Airflow
 
 ## Airflow
 - Utilizando helm chart personalizando:
