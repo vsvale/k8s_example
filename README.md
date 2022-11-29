@@ -94,6 +94,23 @@
 
 ### From sampledb to Kafka
 ![fromsampledbtokafka](imgs/fromsampledbtokafka.png)
-- Através fo Kafka Connect JDBC extrairemos os dados do sampledb e disponibilizaremos no Kafka, como utiliza uma chave e um timestamp será possível identificar inserts e updates
+- Através do Kafka Connect JDBC extraimos os dados do sampledb e disponibilizamos no Kafka, como utiliza uma chave e um timestamp será possível identificar inserts e updates
 - Os connectors source estão disponíveis em [repository/yamls/ingestion/connectors/src](repository/yamls/ingestion/connectors/src)
+- Para ver os logs: kubectl get kafkaconnectors <nomedoconnector> -oyaml -n ingestion
+- Para pegar os nomes dos connectors: kubectl get kafkaconnectors -n ingestion
+- Se utilizar o lenses é possivel identificar que a quantidade de registros dos tópicos batem com a quantidade de registro de cada tabela:
+![sql_count_sampledb](imgs/sql_count_sampledb.png) ![src_count_lenses](imgs/src_count_lenses.png)
+- Query utilizado para o count no sampledb:
+```
+SELECT 'Address',count(*) from SalesLT.Address UNION SELECT 'Customer',count(*) from SalesLT.Customer UNION SELECT 'CustomerAddress',count(*) from SalesLT.CustomerAddress 
+UNION SELECT 'Product',count(*) from SalesLT.Product UNION SELECT 'ProductCategory',count(*) from SalesLT.ProductCategory 
+UNION SELECT 'ProductDescription',count(*) from SalesLT.ProductDescription UNION SELECT 'ProductModel',count(*) from SalesLT.ProductModel 
+UNION SELECT 'ProductModelProductDescription',count(*) from SalesLT.ProductModelProductDescription UNION SELECT 'SalesOrderDetail',count(*) from SalesLT.SalesOrderDetail 
+UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
+```
 
+### From Kafka to S3: Connect
+![kafkatos3connect](imgs/kafkatos3connect.png)
+- Atrés do Kafka connect S3 sink consumimos os dados dos tópicos, transformamos para parquet e disponibilizamos na lanzing zone no MiniO.
+- Os connectors sink estão disponíveis em [repository/yamls/ingestion/connectors/sink](repository/yamls/ingestion/connectors/sink)
+- É necessário alterar aws.access.key.id e aws.secret.access.key para credenciais baixadas durante a criação do tenant
