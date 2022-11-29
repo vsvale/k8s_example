@@ -58,6 +58,7 @@
 - banco de metadados para o Lenses e Airflow
 
 ## Airflow
+- `helm upgrade --install -f ./repository/helm-charts/airflow/values.yaml airflow apache-airflow/airflow --namespace orchestrator --debug --timeout 10m0s`
 - Utilizando helm chart personalizando:
   - imagem: vsvale/vsvale-airflow:2.4.1 [more info](code/airflow)
   - gitsync para https://github.com/vsvale/k8s_example.git
