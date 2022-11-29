@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cruise-control
+  namespace: cicd
+spec:
+  project: default
+  source:
+    repoURL: "https://github.com/vsvale/k8s_example.git"
+    path: repository/yamls/spark/structurestream
+    targetRevision: HEAD
+    directory:
+      recurse: false
+      jsonnet: {}
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: processing

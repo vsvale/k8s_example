@@ -1,0 +1,37 @@
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  name: example-dimcurrency-landing
+  namespace: processing
+spec:
+  type: Python
+  mode: cluster
+  image: "vsvale/k8sexample:1.0.0"
+  imagePullPolicy: Always
+  mainApplicationFile: "local:///app/stream/dimcurrency-landing.py"
+  sparkVersion: "3.1.1"
+  restartPolicy:
+    type: OnFailure
+    onFailureRetries: 3
+    onFailureRetryInterval: 10
+    onSubmissionFailureRetries: 5
+    onSubmissionFailureRetryInterval: 20
+  hadoopConf:
+    "fs.s3a.endpoint": "http://172.19.0.2:8686"
+    "fs.s3a.access.key": "yZe8zwSjfmt0GcJJ"
+    "fs.s3a.secret.key": "O5IgFtO5Qjddzec8N2gL8LD3qu5r3CLG"
+  driver:
+    # cores: 1
+    coreRequest: 500m
+    coreLimit: "2000m"
+    memory: "1000m"
+    labels:
+      version: 3.1.1
+    serviceAccount: default
+  executor:
+    # cores: 1
+    coreRequest: 1000m
+    instances: 1
+    memory: "1000m"
+    labels:
+      version: 3.1.1
