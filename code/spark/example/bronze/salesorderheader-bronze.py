@@ -14,8 +14,8 @@ if __name__ == '__main__':
         .builder \
         .appName("salesorderheader-bronze-py") \
         .config("spark.hadoop.fs.s3a.endpoint", "http://172.19.0.2:8686") \
-        .config("spark.hadoop.fs.s3a.access.key", "NPCwnCXfISZ5RlZr") \
-        .config("spark.hadoop.fs.s3a.secret.key", "A942l4bcUielsXbTDKN5NnGmKNyadoZA") \
+        .config("spark.hadoop.fs.s3a.access.key", "yZe8zwSjfmt0GcJJ") \
+        .config("spark.hadoop.fs.s3a.secret.key", "O5IgFtO5Qjddzec8N2gL8LD3qu5r3CLG") \
         .config("spark.hadoop.fs.s3a.path.style.access", True) \
         .config("spark.hadoop.fs.s3a.fast.upload", True) \
         .config("spark.hadoop.fs.s3a.multipart.size", 104857600) \

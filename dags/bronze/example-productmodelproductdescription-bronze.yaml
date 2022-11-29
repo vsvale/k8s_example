@@ -18,8 +18,8 @@ spec:
     onSubmissionFailureRetryInterval: 20
   hadoopConf:
     "fs.s3a.endpoint": "http://172.19.0.2:8686"
-    "fs.s3a.access.key": "NPCwnCXfISZ5RlZr"
-    "fs.s3a.secret.key": "A942l4bcUielsXbTDKN5NnGmKNyadoZA"
+    "fs.s3a.access.key": "yZe8zwSjfmt0GcJJ"
+    "fs.s3a.secret.key": "O5IgFtO5Qjddzec8N2gL8LD3qu5r3CLG"
   driver:
     # cores: 1
     coreRequest: 250m

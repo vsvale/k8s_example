@@ -57,7 +57,7 @@ airflowVersion: "2.4.1"
 # Images
 images:
   airflow:
-    repository: vsvale-airflow-example
+    repository: vsvale/vsvale-airflow-example
     tag: 2.4.1
     pullPolicy: IfNotPresent
   # To avoid images with user code, you can turn this to 'true' and
