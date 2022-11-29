@@ -1,5 +1,5 @@
 # import libraries
-from k8s_example.code.spark.example.settings import *
+from ..stream.settings import *
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from schemas import schemadimdate
