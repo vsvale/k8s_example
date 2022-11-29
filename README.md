@@ -139,3 +139,5 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
   - No caso especifico desse exemplo antes de montar a imagem é necessário configurar o [settings](code/spark/example/settings.py). Além disso, é necessário corrigir as configurações do S3 dos arquivos de configuração(yaml) das [dags](dags)
 
 ![sparkdevelopment](imgs/sparkdevelopment.png)
+
+### From S3 to Kafka via Spark Structure Stream
