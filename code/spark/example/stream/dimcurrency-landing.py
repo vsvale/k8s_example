@@ -1,5 +1,5 @@
 # import libraries
-from ..stream.settings import *
+import settings
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from schemas import schemadimcurrency
@@ -12,9 +12,9 @@ if __name__ == '__main__':
     spark = SparkSession \
             .builder \
             .appName("dimcurrency-stream") \
-            .config("spark.hadoop.fs.s3a.endpoint", S3ENDPOINT) \
-            .config("spark.hadoop.fs.s3a.access.key", S3ACCESSKEY) \
-            .config("spark.hadoop.fs.s3a.secret.key", S3SECRETKEY) \
+            .config("spark.hadoop.fs.s3a.endpoint", settings.S3ENDPOINT) \
+            .config("spark.hadoop.fs.s3a.access.key", settings.S3ACCESSKEY) \
+            .config("spark.hadoop.fs.s3a.secret.key", settings.S3SECRETKEY) \
             .config("spark.hadoop.fs.s3a.path.style.access", True) \
             .config("spark.hadoop.fs.s3a.fast.upload", True) \
             .config("spark.hadoop.fs.s3a.multipart.size", 104857600) \
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         .selectExpr("CAST(trim(CurrencyKey) AS STRING) AS key", "to_json(struct(*)) AS value") \
         .writeStream \
         .format("kafka") \
-        .option("kafka.bootstrap.servers", BOOTSTRAP_SERVERS) \
+        .option("kafka.bootstrap.servers", settings.BOOTSTRAP_SERVERS) \
         .option("topic", destination_topic) \
         .option("checkpointLocation", "checkpoint") \
         .outputMode("append") \
