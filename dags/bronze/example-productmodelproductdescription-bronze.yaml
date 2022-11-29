@@ -8,7 +8,7 @@ spec:
   mode: cluster
   image: "vsvale/k8sexample:1.0.0"
   imagePullPolicy: Always
-  mainApplicationFile: "local:///app/productmodelproductdescription-bronze.py"
+  mainApplicationFile: "local:///app/bronze/productmodelproductdescription-bronze.py"
   sparkVersion: "3.1.1"
   restartPolicy:
     type: OnFailure
