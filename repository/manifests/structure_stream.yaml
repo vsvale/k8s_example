@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cruise-control
+  name: structuredstream
   namespace: cicd
 spec:
   project: default
