@@ -1,21 +1,22 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: airflow
-  namespace: cicd
-spec:
-  project: default
-  source:
-    repoURL: "https://github.com/vsvale/k8s_example.git"
-    path: repository/helm-charts/airflow
-    targetRevision: HEAD
-    helm:
-      valueFiles:
-        - values.yaml
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: orchestrator
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+#apiVersion: argoproj.io/v1alpha1
+#kind: Application
+#metadata:
+#  name: airflow
+#  namespace: cicd
+#spec:
+#  project: default
+#  source:
+#    repoURL: "https://github.com/vsvale/k8s_example.git"
+#    path: repository/helm-charts/airflow
+#    targetRevision: HEAD
+#    helm:
+#      valueFiles:
+#        - values.yaml
+#  destination:
+#    server: "https://kubernetes.default.svc"
+#    namespace: orchestrator
+#  syncPolicy:
+#    automated:
+#      prune: true
+#      selfHeal: true
+#

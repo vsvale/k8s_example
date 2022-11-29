@@ -11,7 +11,7 @@ apache-airflow-providers-snowflake==3.3.0
 apache-airflow-providers-mysql
 SQLAlchemy==1.4.27
 PyMySQL>=1.0.2
-#astro
-#astronomer-providers==1.10.0
-#airflow-provider-great-expectations>=0.1.4
-#apache-airflow-providers-microsoft-mssql==3.2.1
+astro
+astronomer-providers==1.10.0
+airflow-provider-great-expectations>=0.1.4
+apache-airflow-providers-microsoft-mssql==3.2.1

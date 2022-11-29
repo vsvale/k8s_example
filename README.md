@@ -37,7 +37,7 @@
 - Utilizando o helm chart minio/operator com valores default
 - loadbalancer para a UI (9089) do minio e para a API (8686)
 - JWT: `kubectl get secret console-sa-secret -o jsonpath="{.data.token}" -n deepstorage| base64 --decode`
-- create tenant com TLS disable
+- create tenant examples3 com TLS disable
 - download credentials
 - porta 9090 para acessar o console
 - create landing and lakehouse buckets
