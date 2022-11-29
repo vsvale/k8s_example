@@ -9,4 +9,4 @@ spec:
   - port: 8686
     targetPort: 9000
   selector:
-    v1.min.io/tenant: kappastorage
+    v1.min.io/tenant: examples3
