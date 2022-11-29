@@ -346,14 +346,6 @@ data:
   brokerUrlSecretName: ~
 
   # Otherwise pass connection values in
-#  metadataConnection:
-#    user: plumber
-#    pass: PlumberSDE
-#    protocol: postgresql
-#    host: postgres-postgresql.database.svc.cluster.local
-#    port: 5432
-#    db: owshq
-#    sslmode: disable
   metadataConnection:
     user: postgres
     pass: postgres
@@ -445,7 +437,7 @@ kerberos:
 # Airflow Worker Config
 workers:
   # Number of airflow celery workers in StatefulSet
-  replicas: 1
+  replicas: 3
   # Max number of old replicasets to retain
   revisionHistoryLimit: ~
 
@@ -550,13 +542,13 @@ workers:
     #   cpu: 100m
     #   memory: 128Mi
 
-  resources: {}
-  #  limits:
-  #   cpu: 4
-  #   memory: 4Gi
-  #  requests:
-  #   cpu: 1
-  #   memory: 2Gi
+  resources:
+    limits:
+     cpu: 1
+     memory: 3Gi
+    requests:
+     cpu: 1
+     memory: 1Gi
 
   # Grace period for tasks to finish after SIGTERM is sent from kubernetes
   terminationGracePeriodSeconds: 600
@@ -944,13 +936,13 @@ webserver:
       ports:
         - port: "{{ .Values.ports.airflowUI }}"
 
-  resources: {}
-  #   limits:
-  #     cpu: 1000m
-  #     memory: 1500Mi
-  #   requests:
-  #     cpu: 500m
-  #     memory: 1000Mi
+  resources:
+     limits:
+       cpu: 1000m
+       memory: 1500Mi
+     requests:
+       cpu: 500m
+       memory: 1000Mi
 
   # Create initial user.
   defaultUser:
@@ -1776,7 +1768,7 @@ podTemplate: ~
 dags:
   persistence:
     # Enable persistent volume for storing dags
-    enabled: true
+    enabled: false
     # Volume size for dags
     size: 1Gi
     # If using a custom storageClass, pass name here
