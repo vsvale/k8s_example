@@ -13,9 +13,9 @@ if __name__ == '__main__':
     spark = SparkSession \
         .builder \
         .appName("customeraddress-bronze-py") \
-        .config("spark.hadoop.fs.s3a.endpoint", S3ENDPOINT) \
-        .config("spark.hadoop.fs.s3a.access.key", S3ENDPOINT) \
-        .config("spark.hadoop.fs.s3a.secret.key", S3SECRETKEY) \
+        .config("spark.hadoop.fs.s3a.endpoint", "http://172.19.0.2:8686") \
+        .config("spark.hadoop.fs.s3a.access.key", "NPCwnCXfISZ5RlZr") \
+        .config("spark.hadoop.fs.s3a.secret.key", "A942l4bcUielsXbTDKN5NnGmKNyadoZA") \
         .config("spark.hadoop.fs.s3a.path.style.access", True) \
         .config("spark.hadoop.fs.s3a.fast.upload", True) \
         .config("spark.hadoop.fs.s3a.multipart.size", 104857600) \

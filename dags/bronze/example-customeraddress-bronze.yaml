@@ -6,7 +6,7 @@ metadata:
 spec:
   type: Python
   mode: cluster
-  image: "vsvale/example-bronze:1.0.0"
+  image: "vsvale/k8sexample:1.0.0"
   imagePullPolicy: Always
   mainApplicationFile: "local:///app/customeraddress-bronze.py"
   sparkVersion: "3.1.1"

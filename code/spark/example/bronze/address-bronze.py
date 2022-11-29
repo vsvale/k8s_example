@@ -3,20 +3,19 @@ from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from pyspark import SparkConf
 from pyspark.sql.functions import current_timestamp, current_date
-from k8s_example.code.spark.example.settings import *
+#from k8s_example.code.spark.example.settings import *
 
 # main spark program
 # init application
 if __name__ == '__main__':
-
     # init session
     # set configs
     spark = SparkSession \
         .builder \
         .appName("address-bronze-py") \
-        .config("spark.hadoop.fs.s3a.endpoint", S3ENDPOINT) \
-        .config("spark.hadoop.fs.s3a.access.key", S3ENDPOINT) \
-        .config("spark.hadoop.fs.s3a.secret.key", S3SECRETKEY) \
+        .config("spark.hadoop.fs.s3a.endpoint", "http://172.19.0.2:8686") \
+        .config("spark.hadoop.fs.s3a.access.key", "NPCwnCXfISZ5RlZr") \
+        .config("spark.hadoop.fs.s3a.secret.key", "A942l4bcUielsXbTDKN5NnGmKNyadoZA") \
         .config("spark.hadoop.fs.s3a.path.style.access", True) \
         .config("spark.hadoop.fs.s3a.fast.upload", True) \
         .config("spark.hadoop.fs.s3a.multipart.size", 104857600) \

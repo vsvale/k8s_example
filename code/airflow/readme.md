@@ -1,2 +1,2 @@
 - docker login
-- docker build ./orchestrator/airflow -t vsvale/vsvale-airflow:2.4.1; docker push vsvale/vsvale-airflow:2.4.1;
+- docker build code/airflow -t vsvale/vsvale-airflow:2.4.1; docker push vsvale/vsvale-airflow:2.4.1;
