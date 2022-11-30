@@ -141,3 +141,10 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 ![sparkdevelopment](imgs/sparkdevelopment.png)
 
 ### From S3 to Kafka via Spark Structure Stream
+
+dimcurrency, dimdate, dimproductsubcategory, dimpromotion, dimsalesterritory, factinternetsalesreason
+code/minio/example/dw-files
+![miniodwfiles](imgs/miniodwfiles.png)
+code/spark/example/stream
+repository/yamls/spark/structurestream
+![dwfiles_lenses](imgs/dwfiles_lenses.png)
