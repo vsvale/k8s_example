@@ -140,7 +140,7 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 
 ![sparkdevelopment](imgs/sparkdevelopment.png)
 
-### dimcurrency
+### From S3 to Kafka
 ![dimcurrency](imgs/dimcurrency.png)
 - Tem como origem arquivo disponibilizado na landing zone
 - A ingestão é realiza via stream, o job spark fica rodando constantemente procurando um arquivo na pasta para processar. Quando um arquivo chega cada registro é processado e salvo em modo append em um tópico do kafka

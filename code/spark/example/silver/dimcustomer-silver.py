@@ -137,6 +137,7 @@ if __name__ == '__main__':
 
         silver_table.write.mode(write_delta_mode)\
             .format("delta")\
+            .option("mergeSchema", "true")\
             .partitionBy("s_load_date")\
             .save(destination_folder)
 
@@ -146,6 +147,9 @@ if __name__ == '__main__':
     destiny = spark.read \
         .format("delta") \
         .load(destination_folder)
+    
+    print(origin_count)
+    print(destiny)
     
     destiny_count = destiny.count()
 
