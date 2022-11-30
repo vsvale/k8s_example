@@ -147,6 +147,9 @@ if __name__ == '__main__':
     destiny = spark.read \
         .format("delta") \
         .load(destination_folder)
+
+    destiny.show()
+    destiny.printSchema()
     
     print(origin_count)
     print(destiny)
