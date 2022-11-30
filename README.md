@@ -128,7 +128,7 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 ### Lake house
 ![lakehouse](imgs/lakehouse.png)
 - O Airflow aciona o job Spark, o Spark Operator cria o driver e workers necessários para o processamento no Kubernetes. O dado é processado e salvo em outra camada.
-- Na camada Bronze os dados são convertidos de [Parquet para delta]()
+- Na camada Bronze os dados são convertidos de Parquet para delta
 - Na camada Silver ocorre schema enforcement e joins necessários para formar as dimensões e fatos
 - Na camada gold teremos a versão final da tabela que será salvo no DW, para isso será realizado o merge entre o conteudo da silver e da tabela destino
 - Para processar com o Spark precisamos gerar uma imagem OCI.
@@ -140,11 +140,23 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 
 ![sparkdevelopment](imgs/sparkdevelopment.png)
 
-### From S3 to Kafka via Spark Structure Stream
-
-dimcurrency, dimdate, dimproductsubcategory, dimpromotion, dimsalesterritory, factinternetsalesreason
-code/minio/example/dw-files
-![miniodwfiles](imgs/miniodwfiles.png)
-code/spark/example/stream
-repository/yamls/spark/structurestream
+### dimcurrency
+![dimcurrency](imgs/dimcurrency.png)
+- Tem como origem arquivo disponibilizado na landing zone
+- A ingestão é realiza via stream, o job spark fica rodando constantemente procurando um arquivo na pasta para processar. Quando um arquivo chega cada registro é processado e salvo em modo append em um tópico do kafka
 ![dwfiles_lenses](imgs/dwfiles_lenses.png)
+- Arquivos de origem estão disponíveis em [code/minio/example/dw-files](ode/minio/example/dw-files)
+![miniodwfiles](imgs/miniodwfiles.png)
+- Jobs de ingestão estão disponíveis em [code/spark/example/stream](code/spark/example/stream)
+- Arquivos de configuração estão disponíveis em repository/yamls/spark/structurestream
+- O fluxo do Kafka até o Yugabyte segue em modo batch semelhante ao que acontece no Lake house
+
+
+
+### From Kafka to S3 via Spark Structure Stream
+dimproductsubcategory
+
+### From Kafka to YugabyteDB via Spark
+
+### From Kafka to YugabyteDB via Spark Structure Stream
+

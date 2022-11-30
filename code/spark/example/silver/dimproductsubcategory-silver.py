@@ -3,8 +3,8 @@ import settings
 from pyspark.sql.functions import *
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
-from schemas import schemadimcurrency
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType
+from schemas import schemadimproductsubcategory
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType, FloatType, BooleanType, DoubleType, ByteType
 
 # main spark program
 if __name__ == '__main__':
@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # init spark session
     spark = SparkSession \
             .builder \
-            .appName("example-dimcurrency-silver") \
+            .appName("example-dimproductsubcategory-silver") \
             .config("spark.hadoop.fs.s3a.endpoint", settings.S3ENDPOINT) \
             .config("spark.hadoop.fs.s3a.access.key", settings.S3ACCESSKEY) \
             .config("spark.hadoop.fs.s3a.secret.key", settings.S3SECRETKEY) \
@@ -32,78 +32,75 @@ if __name__ == '__main__':
     spark.sparkContext.setLogLevel("INFO")
 
     # refer to schemas.py file
-    schema = schemadimcurrency
-    input_topic = "dimcurrency_spark_stream_dwfiles"
-    destination_folder = "s3a://lakehouse/silver/example/dimcurrency/"
+    schema = schemadimproductsubcategory
+    input_topic = "dimproductsubcategory_spark_stream_dwfiles"
+    destination_folder = "s3a://lakehouse/silver/example/dimproductsubcategory/"
     write_delta_mode = "overwrite"
-    destination_table = "public.dimcurrency"
     jsonOptions = {"timestampFormat": "yyyy-MM-dd'T'HH:mm:ss.sss'Z'"}
 
     # reading data from apache kafka
     # stream operation mode
     # latest offset recorded on kafka and spark
     stream_table= spark \
-        .read\
+        .readStream\
         .format("kafka") \
         .option("kafka.bootstrap.servers", settings.BOOTSTRAP_SERVERS) \
         .option("subscribe", input_topic) \
-        .option("startingOffsets", "earliest") \
+        .option("startingOffsets", "latest") \
         .option("checkpoint", "checkpoint") \
         .load() \
         .select(from_json(col("value").cast("string"), schema, jsonOptions).alias("table_tpc"))
 
-    stream_table.printSchema()
 
-    stream_table = (stream_table
+    stream_table_col = (stream_table
     .select(
-        col("table_tpc.CurrencyKey").alias("CurrencyKey"),
-        col("table_tpc.CurrencyAlternateKey").alias("CurrencyAlternateKey"),
-        col("table_tpc.CurrencyName").alias("CurrencyName"),
+        col("table_tpc.ProductSubcategoryKey").alias("ProductSubcategoryKey"),
+        col("table_tpc.ProductSubcategoryAlternateKey").alias("ProductSubcategoryAlternateKey"),
+        col("table_tpc.EnglishProductSubcategoryName").alias("EnglishProductSubcategoryName"),
+        col("table_tpc.SpanishProductSubcategoryName").alias("SpanishProductSubcategoryName"),
+        col("table_tpc.FrenchProductSubcategoryName").alias("FrenchProductSubcategoryName"),
+        col("table_tpc.ProductCategoryKey").alias("ProductCategoryKey"),
     )
     )
 
-    stream_table.show()
-    stream_table.printSchema()
-
-    # write to silver
-    if DeltaTable.isDeltaTable(spark, destination_folder):
+    def upsertToDelta(microBatchOutputDF, batchId):
         dt_table = DeltaTable.forPath(spark, destination_folder)
         dt_table.alias("historical_data")\
             .merge(
                 stream_table.alias("new_data"),
                 '''
-                historical_data.CurrencyKey = new_data.CurrencyKey 
+                historical_data.ProductSubcategoryKey = new_data.ProductSubcategoryKey 
                 ''')\
             .whenMatchedUpdateAll()\
-            .whenNotMatchedInsertAll()
+            .whenNotMatchedInsertAll()\
+            .execute()
+
+    # write to silver
+    if DeltaTable.isDeltaTable(spark, destination_folder):
+        stream_table_col.writeStream \
+        .format("delta") \
+        .foreachBatch(upsertToDelta) \
+        .outputMode("update") \
+        .start()
     else:
         DeltaTable.createIfNotExists(spark) \
-        .tableName("dimcurrency") \
-        .addColumn("CurrencyKey", IntegerType()) \
-        .addColumn("CurrencyAlternateKey", StringType()) \
-        .addColumn("CurrencyName", StringType()) \
-        .location(destination_folder) \
+        .tableName("dimproductsubcategory") \
+        .addColumn('ProductSubcategoryKey',IntegerType()) \
+        .addColumn('ProductSubcategoryAlternateKey',IntegerType()) \
+        .addColumn('EnglishProductSubcategoryName',StringType()) \
+        .addColumn('SpanishProductSubcategoryName',StringType()) \
+        .addColumn('FrenchProductSubcategoryName',StringType()) \
+        .addColumn('ProductCategoryKey',IntegerType()) \
         .execute()
 
-        stream_table.write\
-            .mode(write_delta_mode)\
-            .option("mergeSchema", "true")\
-            .format("delta")\
-            .save(destination_folder)
+        write_stream_table_col = (stream_table_col.writeStream
+            .format("delta")
+            .outputMode("append")
+            .option("checkpointLocation", "checkpoint")
+            .toTable(destination_folder)
+        )
 
-    #verify count origin vs destination
-    origin_count = stream_table.count()
 
-    destiny = spark.read \
-        .format("delta") \
-        .load(destination_folder)
-    
-    destiny_count = destiny.count()
-
-    print(origin_count)
-    print(destiny_count)
-
-    if origin_count != destiny_count:
-        raise AssertionError("Counts of origin and destiny are not equal")
-
-    spark.stop()
+        print(write_stream_table_col.lastProgress)
+        print(write_stream_table_col.status)
+        write_stream_table_col.awaitTermination()
