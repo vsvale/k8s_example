@@ -1,4 +1,5 @@
 # import libraries
+import settings
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from pyspark import SparkConf
@@ -13,9 +14,9 @@ if __name__ == '__main__':
     spark = SparkSession \
         .builder \
         .appName("product-bronze-py") \
-        .config("spark.hadoop.fs.s3a.endpoint", "http://172.19.0.2:8686") \
-        .config("spark.hadoop.fs.s3a.access.key", "yZe8zwSjfmt0GcJJ") \
-        .config("spark.hadoop.fs.s3a.secret.key", "O5IgFtO5Qjddzec8N2gL8LD3qu5r3CLG") \
+        .config("spark.hadoop.fs.s3a.endpoint", settings.S3ENDPOINT) \
+        .config("spark.hadoop.fs.s3a.access.key", settings.S3ACCESSKEY) \
+        .config("spark.hadoop.fs.s3a.secret.key", settings.S3SECRETKEY) \
         .config("spark.hadoop.fs.s3a.path.style.access", True) \
         .config("spark.hadoop.fs.s3a.fast.upload", True) \
         .config("spark.hadoop.fs.s3a.multipart.size", 104857600) \
