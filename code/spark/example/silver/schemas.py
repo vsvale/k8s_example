@@ -1,4 +1,4 @@
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType, BooleanType, FloatType, DoubleType, ByteType
+from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType, BooleanType,DecimalType ,FloatType, DoubleType, ByteType
 
 schemadimdate = StructType(
     [
@@ -92,22 +92,22 @@ schemadimproduct = StructType(
         StructField('EnglishProductName',StringType(),True),
         StructField('SpanishProductName',StringType(),True),
         StructField('FrenchProductName',StringType(),True),
-        StructField('StandardCost',FloatType(),True),
+        StructField('StandardCost',DecimalType(),True),
         StructField('FinishedGoodsFlag',BooleanType(),True),
         StructField('Color',StringType(),True),
         StructField('SafetyStockLevel',IntegerType(),True),
         StructField('ReorderPoint',IntegerType(),True),
-        StructField('ListPrice',FloatType(),True),
+        StructField('ListPrice',DecimalType(),True),
         StructField('Size',StringType(),True),
         StructField('SizeRange',StringType(),True),
-        StructField('Weight',DoubleType(),True),
+        StructField('Weight',DecimalType(),True),
         StructField('DaysToManufacture',IntegerType(),True),
         StructField('ProductLine',StringType(),True),
-        StructField('DealerPrice',FloatType(),True),
+        StructField('DealerPrice',DecimalType(),True),
         StructField('Class',StringType(),True),
         StructField('Style',StringType(),True),
         StructField('ModelName',StringType(),True),
-        StructField('LargePhoto',ByteType(),True),
+        StructField('LargePhoto',StringType(),True),
         StructField('EnglishDescription',StringType(),True),
         StructField('FrenchDescription',StringType(),True),
         StructField('ChineseDescription',StringType(),True),

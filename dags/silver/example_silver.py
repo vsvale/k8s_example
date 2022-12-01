@@ -235,9 +235,37 @@ def example_silver():
 
         [verify_product_bronze,verify_productsubcategory_bronze, verify_productcategory_bronze, verify_productmodel_bronze, verify_productmodelproductdescription_bronze, verify_productdescription_bronze] >> silver_dimproduct_spark_operator >> monitor_silver_dimproduct_spark_operator >> list_silver_example_dimproduct_folder
 
+    @task_group()
+    def dimdate_silver():
+        # use spark-on-k8s to operate against the data
+        silver_dimdate_spark_operator = SparkKubernetesOperator(
+        task_id='t_silver_dimdate_spark_operator',
+        namespace='processing',
+        application_file='example-dimdate-silver.yaml',
+        kubernetes_conn_id='kubeconnect',
+        do_xcom_push=True)
 
-    [dimcustomer_silver(),dimcurrency_silver()]
-    dimproductcategory_silver() >> dimproduct_silver()
+        # monitor spark application using sensor to determine the outcome of the task
+        monitor_silver_dimdate_spark_operator = SparkKubernetesSensor(
+        task_id='t_monitor_silver_dimdate_spark_operator',
+        namespace="processing",
+        application_name="{{ task_instance.xcom_pull(task_ids='dimdate_silver.t_silver_dimdate_spark_operator')['metadata']['name'] }}",
+        kubernetes_conn_id="kubeconnect")
+
+        # Confirm files are created
+        list_silver_example_dimdate_folder = S3ListOperator(
+        task_id='t_list_silver_example_dimdate_folder',
+        bucket=LAKEHOUSE,
+        prefix='silver/example/dimdate',
+        delimiter='/',
+        aws_conn_id='minio',
+        do_xcom_push=True)
+
+        silver_dimdate_spark_operator >> monitor_silver_dimdate_spark_operator >> list_silver_example_dimdate_folder
+
+
+    [dimcustomer_silver(),dimcurrency_silver(),dimdate_silver()]
+    [dimproductcategory_silver() >> dimproduct_silver()]
     
 
 

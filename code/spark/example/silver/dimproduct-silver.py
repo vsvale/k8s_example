@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     silver_table = (
         bronze_df
-        .join(subcat_df,on=[col("b.ProductSubcategoryKey")==col("sc.ProductSubcategoryKey")],how="left")
+        .join(subcat_df,on=[col("b.ProductCategoryID")==col("sc.ProductCategoryKey")],how="left")
         .join(bronze_cat,on=[col("b.ProductCategoryID")==col("c.ProductCategoryID")],how="left")
         .join(bronze_mod,on=[col("b.ProductModelID")==col("m.ProductModelID")],how="left")
         .join(bronze_moddesc,on=[(col("m.ProductModelID")==col("md.ProductModelID")) & (col("md.Culture")==lit("en"))],how="left")

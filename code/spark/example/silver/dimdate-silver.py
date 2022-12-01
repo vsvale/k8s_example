@@ -4,7 +4,6 @@ from pyspark.sql.functions import *
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from schemas import schemadimdate
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType
 
 # main spark program
 if __name__ == '__main__':
@@ -52,10 +51,6 @@ if __name__ == '__main__':
         .load() \
         .select(from_json(col("value").cast("string"), schema, jsonOptions).alias("table_tpc"))
 
-    stream_table.printSchema()
-
-
-
     stream_table = (stream_table
     .select(
         col('table_tpc.DateKey').alias('DateKey'),
@@ -80,48 +75,22 @@ if __name__ == '__main__':
     )
     )
 
-    stream_table.show()
-    stream_table.printSchema()
+    silver_table = spark.createDataFrame(stream_table.rdd,schema=schemadimdate)
 
     # write to silver
     if DeltaTable.isDeltaTable(spark, destination_folder):
         dt_table = DeltaTable.forPath(spark, destination_folder)
         dt_table.alias("historical_data")\
             .merge(
-                stream_table.alias("new_data"),
+                silver_table.alias("new_data"),
                 '''
                 historical_data.DateKey = new_data.DateKey 
                 ''')\
             .whenMatchedUpdateAll()\
             .whenNotMatchedInsertAll()
     else:
-        DeltaTable.createIfNotExists(spark) \
-        .tableName("dimdate") \
-        .addColumn('DateKey',IntegerType()) \
-        .addColumn('FullDateAlternateKey',DateType()) \
-        .addColumn('DayNumberOfWeek',IntegerType()) \
-        .addColumn('EnglishDayNameOfWeek',StringType()) \
-        .addColumn('SpanishDayNameOfWeek',StringType()) \
-        .addColumn('FrenchDayNameOfWeek',StringType()) \
-        .addColumn('DayNumberOfMonth',IntegerType()) \
-        .addColumn('DayNumberOfYear',IntegerType()) \
-        .addColumn('WeekNumberOfYear',IntegerType()) \
-        .addColumn('EnglishMonthName',StringType()) \
-        .addColumn('SpanishMonthName',StringType()) \
-        .addColumn('FrenchMonthName',StringType()) \
-        .addColumn('MonthNumberOfYear',IntegerType()) \
-        .addColumn('CalendarQuarter',IntegerType()) \
-        .addColumn('CalendarYear',IntegerType()) \
-        .addColumn('CalendarSemester',IntegerType()) \
-        .addColumn('FiscalQuarter',IntegerType()) \
-        .addColumn('FiscalYear',IntegerType()) \
-        .addColumn('FiscalSemester',IntegerType()) \
-        .location(destination_folder) \
-        .execute()
-
-        stream_table.write\
+        silver_table.write\
             .mode(write_delta_mode)\
-            .option("mergeSchema", "true")\
             .format("delta")\
             .save(destination_folder)
 
@@ -134,8 +103,8 @@ if __name__ == '__main__':
     
     destiny_count = destiny.count()
 
-    print(origin_count)
-    print(destiny_count)
+    print("origin",origin_count)
+    print("destiny",destiny_count)
 
     if origin_count != destiny_count:
         raise AssertionError("Counts of origin and destiny are not equal")
