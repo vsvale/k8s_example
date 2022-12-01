@@ -51,8 +51,6 @@ if __name__ == '__main__':
         .load() \
         .select(from_json(col("value").cast("string"), schema, jsonOptions).alias("table_tpc"))
 
-    stream_table.printSchema()
-
     stream_table = (stream_table
     .select(
         col("table_tpc.CurrencyKey").alias("CurrencyKey"),
@@ -61,34 +59,27 @@ if __name__ == '__main__':
     )
     )
 
+    silver_table = spark.createDataFrame(stream_table.rdd,schema=schemadimcurrency)
+
     # write to silver
     if DeltaTable.isDeltaTable(spark, destination_folder):
         dt_table = DeltaTable.forPath(spark, destination_folder)
         dt_table.alias("historical_data")\
             .merge(
-                stream_table.alias("new_data"),
+                silver_table.alias("new_data"),
                 '''
                 historical_data.CurrencyKey = new_data.CurrencyKey 
                 ''')\
             .whenMatchedUpdateAll()\
             .whenNotMatchedInsertAll()
     else:
-        DeltaTable.createIfNotExists(spark) \
-        .tableName("dimcurrency") \
-        .addColumn("CurrencyKey", IntegerType()) \
-        .addColumn("CurrencyAlternateKey", StringType()) \
-        .addColumn("CurrencyName", StringType()) \
-        .location(destination_folder) \
-        .execute()
-
-        stream_table.write\
+        silver_table.write\
             .mode(write_delta_mode)\
-            .option("mergeSchema", "true")\
             .format("delta")\
             .save(destination_folder)
 
     #verify count origin vs destination
-    origin_count = stream_table.count()
+    origin_count = silver_table.count()
 
     destiny = spark.read \
         .format("delta") \
@@ -96,6 +87,9 @@ if __name__ == '__main__':
     
     destiny_count = destiny.count()
 
+    print("origin",origin_count)
+    print("destiny",destiny_count)
+    
     if origin_count != destiny_count:
         raise AssertionError("Counts of origin and destiny are not equal")
 
