@@ -29,7 +29,7 @@ if __name__ == '__main__':
         .getOrCreate()
 
     # set log level
-    spark.sparkContext.setLogLevel("ERROR")
+    spark.sparkContext.setLogLevel("INFO")
 
     # variables
     customer_bronze = "s3a://lakehouse/bronze/example/customer/"
@@ -111,12 +111,6 @@ if __name__ == '__main__':
         .load(destination_folder)
 
     destiny_count = destiny.count()
-
-    print("origin",origin_count)
-    print("destiny",destiny_count)
-    print(silver_table.printSchema())
-    print(destiny.printSchema())
-    
 
     if origin_count != destiny_count:
         raise AssertionError("Counts of origin and destiny are not equal")

@@ -5,7 +5,7 @@ from pyspark.sql import SparkSession
 from pyspark import SparkConf
 from pyspark.sql.functions import current_timestamp, current_date, col, lit, when
 from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType
-
+from schemas import schemaproductcategory
 # main spark program
 # init application
 if __name__ == '__main__':
@@ -55,35 +55,23 @@ if __name__ == '__main__':
     )
     )
 
-    silver_table = silver_table.withColumn("s_create_at", current_timestamp())
-    silver_table = silver_table.withColumn("s_load_date", current_date())
+    silver_table = spark.createDataFrame(silver_table.rdd,schema=schemaproductcategory)
 
-   
+    # write to silver   
     if DeltaTable.isDeltaTable(spark, destination_folder):
         dt_table = DeltaTable.forPath(spark, destination_folder)
         dt_table.alias("historical_data")\
             .merge(
                 silver_table.alias("new_data"),
                 '''
-                historical_data.CustomerID = new_data.CustomerID 
+                historical_data.ProductCategoryKey = new_data.ProductCategoryKey 
                 ''')\
             .whenMatchedUpdateAll()\
             .whenNotMatchedInsertAll()
     else:
-        DeltaTable.createIfNotExists(spark) \
-        .tableName("dimproductcategory") \
-        .addColumn("ProductCategoryKey", IntegerType()) \
-        .addColumn("ProductCategoryAlternateKey", IntegerType()) \
-        .addColumn("EnglishProductCategoryName", StringType()) \
-        .addColumn("SpanishProductCategoryName", StringType()) \
-        .addColumn("FrenchProductCategoryName", StringType()) \
-        .location(destination_folder) \
-        .execute()
-
-        silver_table.write.mode(write_delta_mode)\
-            .option("mergeSchema", "true")\
+        silver_table.write\
+            .mode(write_delta_mode)\
             .format("delta")\
-            .partitionBy("s_load_date")\
             .save(destination_folder)
 
     #verify count origin vs destination

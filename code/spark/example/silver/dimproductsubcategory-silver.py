@@ -83,21 +83,11 @@ if __name__ == '__main__':
         .outputMode("update") \
         .start()
     else:
-        DeltaTable.createIfNotExists(spark) \
-        .tableName("dimproductsubcategory") \
-        .addColumn('ProductSubcategoryKey',IntegerType()) \
-        .addColumn('ProductSubcategoryAlternateKey',IntegerType()) \
-        .addColumn('EnglishProductSubcategoryName',StringType()) \
-        .addColumn('SpanishProductSubcategoryName',StringType()) \
-        .addColumn('FrenchProductSubcategoryName',StringType()) \
-        .addColumn('ProductCategoryKey',IntegerType()) \
-        .execute()
-
         write_stream_table_col = (stream_table_col.writeStream
             .format("delta")
             .outputMode("append")
             .option("checkpointLocation", "checkpoint")
-            .toTable(destination_folder)
+            .start(destination_folder)
         )
 
 
