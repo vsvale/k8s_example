@@ -82,7 +82,7 @@ schemadimgeography = StructType(
     ]
 )
 
-schemadimcproduct = StructType(
+schemadimproduct = StructType(
     [
         StructField('ProductKey',IntegerType(),True),
         StructField('ProductAlternateKey',StringType(),True),

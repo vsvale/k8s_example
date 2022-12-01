@@ -3,7 +3,6 @@ import settings
 from pyspark.sql.functions import *
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField,FloatType,BooleanType, IntegerType, StringType, TimestampType, DateType
 from schemas import schemadimcustomer
 # main spark program
 # init application

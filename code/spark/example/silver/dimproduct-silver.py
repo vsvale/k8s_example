@@ -3,8 +3,8 @@ import settings
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from pyspark import SparkConf
-from pyspark.sql.functions import current_timestamp, current_date, col, lit, when
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType, FloatType, BooleanType, DoubleType, ByteType
+from pyspark.sql.functions import col, lit, when
+from schemas import schemadimproduct
 
 # main spark program
 # init application
@@ -27,9 +27,6 @@ if __name__ == '__main__':
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
         .getOrCreate()
-
-    # show configured parameters
-    print(SparkConf().getAll())
 
     # set log level
     spark.sparkContext.setLogLevel("INFO")
@@ -105,8 +102,7 @@ if __name__ == '__main__':
         )   
     )
 
-    silver_table = silver_table.withColumn("s_create_at", current_timestamp())
-    silver_table = silver_table.withColumn("s_load_date", current_date())
+    silver_table = spark.createDataFrame(silver_table.rdd,schema=schemadimproduct)
 
    
     if DeltaTable.isDeltaTable(spark, destination_folder):
@@ -115,56 +111,15 @@ if __name__ == '__main__':
             .merge(
                 silver_table.alias("new_data"),
                 '''
-                historical_data.ProductID = new_data.ProductID 
+                historical_data.ProductKey = new_data.ProductKey 
                 ''')\
             .whenMatchedUpdateAll()\
             .whenNotMatchedInsertAll()
     else:
-        DeltaTable.createIfNotExists(spark) \
-        .tableName("dimproduct") \
-        .addColumn('ProductKey',IntegerType()) \
-        .addColumn('ProductAlternateKey',StringType()) \
-        .addColumn('ProductSubcategoryKey',IntegerType()) \
-        .addColumn('WeightUnitMeasureCode',StringType()) \
-        .addColumn('SizeUnitMeasureCode',StringType()) \
-        .addColumn('EnglishProductName',StringType()) \
-        .addColumn('SpanishProductName',StringType()) \
-        .addColumn('FrenchProductName',StringType()) \
-        .addColumn('StandardCost',FloatType()) \
-        .addColumn('FinishedGoodsFlag',BooleanType()) \
-        .addColumn('Color',StringType()) \
-        .addColumn('SafetyStockLevel',IntegerType()) \
-        .addColumn('ReorderPoint',IntegerType()) \
-        .addColumn('ListPrice',FloatType()) \
-        .addColumn('Size',StringType()) \
-        .addColumn('SizeRange',StringType()) \
-        .addColumn('Weight',DoubleType()) \
-        .addColumn('DaysToManufacture',IntegerType()) \
-        .addColumn('ProductLine',StringType()) \
-        .addColumn('DealerPrice',FloatType()) \
-        .addColumn('Class',StringType()) \
-        .addColumn('Style',StringType()) \
-        .addColumn('ModelName',StringType()) \
-        .addColumn('LargePhoto',ByteType()) \
-        .addColumn('EnglishDescription',StringType()) \
-        .addColumn('FrenchDescription',StringType()) \
-        .addColumn('ChineseDescription',StringType()) \
-        .addColumn('ArabicDescription',StringType()) \
-        .addColumn('HebrewDescription',StringType()) \
-        .addColumn('ThaiDescription',StringType()) \
-        .addColumn('GermanDescription',StringType()) \
-        .addColumn('JapaneseDescription',StringType()) \
-        .addColumn('TurkishDescription',StringType()) \
-        .addColumn('StartDate',TimestampType()) \
-        .addColumn('EndDate',TimestampType()) \
-        .addColumn('Status',StringType()) \
-        .location(destination_folder) \
-        .execute()
 
-        silver_table.write.mode(write_delta_mode)\
-            .option("mergeSchema", "true")\
+        silver_table.write\
+            .mode(write_delta_mode)\
             .format("delta")\
-            .partitionBy("s_load_date")\
             .save(destination_folder)
 
     #verify count origin vs destination
