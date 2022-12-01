@@ -1,7 +1,7 @@
 apiVersion: "sparkoperator.k8s.io/v1beta2"
 kind: SparkApplication
 metadata:
-  name: example-dimproductsubcategory-landing
+  name: example-dimproductsubcategory-silver
   namespace: processing
 spec:
   type: Python
