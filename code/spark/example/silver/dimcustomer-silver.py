@@ -1,11 +1,11 @@
 # import libraries
 import settings
+from pyspark.sql.functions import *
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
-from pyspark import SparkConf
-from pyspark.sql.functions import current_timestamp, current_date, col, lit, when
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType, FloatType, BooleanType, DoubleType, ByteType
-
+from schemas import schemadimcurrency
+from pyspark.sql.types import StructType, StructField,FloatType,BooleanType, IntegerType, StringType, TimestampType, DateType
+from schemas import schemadimcustomer
 # main spark program
 # init application
 if __name__ == '__main__':
@@ -28,11 +28,8 @@ if __name__ == '__main__':
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
         .getOrCreate()
 
-    # show configured parameters
-    print(SparkConf().getAll())
-
     # set log level
-    spark.sparkContext.setLogLevel("INFO")
+    spark.sparkContext.setLogLevel("ERROR")
 
     # variables
     customer_bronze = "s3a://lakehouse/bronze/example/customer/"
@@ -62,7 +59,9 @@ if __name__ == '__main__':
             col("c.FirstName").alias("FirstName"),
             col("c.MiddleName").alias("MiddleName"),
             col("c.LastName").alias("LastName"),
-            col("c.NameStyle").alias("NameStyle"),
+            when(col("c.NameStyle")==lit(0),lit(False)).otherwise(lit(True)).alias("NameStyle"),
+            lit(None).alias('BirthDate'),
+            lit(None).alias('MaritalStatus'),
             col("c.Suffix").alias("Suffix"),
             when(col("c.Title").isin(["Sr.","Mr."]),"M").when(col("c.Title").isin(["Sra.","Ms."]),"F").otherwise(lit(None)).alias("Gender"),
             col("c.EmailAddress").alias("EmailAddress"),
@@ -85,60 +84,23 @@ if __name__ == '__main__':
     )
     )
 
-    silver_table = silver_table.withColumn("s_create_at", current_timestamp())
-    silver_table = silver_table.withColumn("s_load_date", current_date())
+    silver_table = spark.createDataFrame(silver_table.rdd,schema=schemadimcustomer)
 
-   
+    # write to silver
     if DeltaTable.isDeltaTable(spark, destination_folder):
         dt_table = DeltaTable.forPath(spark, destination_folder)
         dt_table.alias("historical_data")\
             .merge(
                 silver_table.alias("new_data"),
                 '''
-                historical_data.CustomerID = new_data.CustomerID 
+                historical_data.CustomerKey = new_data.CustomerKey 
                 ''')\
             .whenMatchedUpdateAll()\
             .whenNotMatchedInsertAll()
     else:
-        DeltaTable.createIfNotExists(spark) \
-        .tableName("dimcustomer") \
-        .addColumn("CurrencyKey", IntegerType()) \
-        .addColumn('CustomerKey',IntegerType()) \
-        .addColumn('GeographyKey',IntegerType()) \
-        .addColumn('CustomerAlternateKey',StringType()) \
-        .addColumn('Title',StringType()) \
-        .addColumn('FirstName',StringType()) \
-        .addColumn('MiddleName',StringType()) \
-        .addColumn('LastName',StringType()) \
-        .addColumn('NameStyle',BooleanType()) \
-        .addColumn('BirthDate',DateType()) \
-        .addColumn('MaritalStatus',StringType()) \
-        .addColumn('Suffix',StringType()) \
-        .addColumn('Gender',StringType()) \
-        .addColumn('EmailAddress',StringType()) \
-        .addColumn('YearlyIncome',FloatType()) \
-        .addColumn('TotalChildren',IntegerType()) \
-        .addColumn('NumberChildrenAtHome',IntegerType()) \
-        .addColumn('EnglishEducation',StringType()) \
-        .addColumn('SpanishEducation',StringType()) \
-        .addColumn('FrenchEducation',StringType()) \
-        .addColumn('EnglishOccupation',StringType()) \
-        .addColumn('SpanishOccupation',StringType()) \
-        .addColumn('FrenchOccupation',StringType()) \
-        .addColumn('HouseOwnerFlag',StringType()) \
-        .addColumn('NumberCarsOwned',IntegerType()) \
-        .addColumn('AddressLine1',StringType()) \
-        .addColumn('AddressLine2',StringType()) \
-        .addColumn('Phone',StringType()) \
-        .addColumn('DateFirstPurchase',DateType()) \
-        .addColumn('CommuteDistance',StringType()) \
-        .location(destination_folder) \
-        .execute()
-
-        silver_table.write.mode(write_delta_mode)\
+        silver_table.write\
+            .mode(write_delta_mode)\
             .format("delta")\
-            .option("mergeSchema", "true")\
-            .partitionBy("s_load_date")\
             .save(destination_folder)
 
     #verify count origin vs destination
@@ -148,13 +110,13 @@ if __name__ == '__main__':
         .format("delta") \
         .load(destination_folder)
 
-    destiny.show()
-    destiny.printSchema()
-    
-    print(origin_count)
-    print(destiny)
-    
     destiny_count = destiny.count()
+
+    print("origin",origin_count)
+    print("destiny",destiny_count)
+    print(silver_table.printSchema())
+    print(destiny.printSchema())
+    
 
     if origin_count != destiny_count:
         raise AssertionError("Counts of origin and destiny are not equal")

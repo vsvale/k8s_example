@@ -36,7 +36,6 @@ if __name__ == '__main__':
     input_topic = "dimcurrency_spark_stream_dwfiles"
     destination_folder = "s3a://lakehouse/silver/example/dimcurrency/"
     write_delta_mode = "overwrite"
-    destination_table = "public.dimcurrency"
     jsonOptions = {"timestampFormat": "yyyy-MM-dd'T'HH:mm:ss.sss'Z'"}
 
     # reading data from apache kafka
