@@ -113,8 +113,48 @@ def example_silver():
         do_xcom_push=True)
 
         silver_dimcurrency_spark_operator >> monitor_silver_dimcurrency_spark_operator >> list_silver_example_dimcurrency_folder
-    dimcustomer_silver()
-    dimcurrency_silver()
+
+    @task_group()
+    def dimproductcategory_silver():
+        # verify if new data has arrived on bronze bucket
+        verify_productcategory_bronze = S3KeySensor(
+        task_id='t_verify_productcategory_bronze',
+        bucket_name=LAKEHOUSE,
+        bucket_key='bronze/example/productcategory/*/*.parquet',
+        wildcard_match=True,
+        timeout=18 * 60 * 60,
+        poke_interval=120,
+        aws_conn_id='minio')
+
+        # use spark-on-k8s to operate against the data
+        silver_dimproductcategory_spark_operator = SparkKubernetesOperator(
+        task_id='t_silver_dimproductcategory_spark_operator',
+        namespace='processing',
+        application_file='example-dimproductcategory-silver.yaml',
+        kubernetes_conn_id='kubeconnect',
+        do_xcom_push=True)
+
+        # monitor spark application using sensor to determine the outcome of the task
+        monitor_silver_dimproductcategory_spark_operator = SparkKubernetesSensor(
+        task_id='t_monitor_silver_dimproductcategory_spark_operator',
+        namespace="processing",
+        application_name="{{ task_instance.xcom_pull(task_ids='dimproductcategory_silver.t_silver_dimproductcategory_spark_operator')['metadata']['name'] }}",
+        kubernetes_conn_id="kubeconnect")
+
+        # Confirm files are created
+        list_silver_example_dimproductcategory_folder = S3ListOperator(
+        task_id='t_list_silver_example_dimproductcategory_folder',
+        bucket=LAKEHOUSE,
+        prefix='silver/example/dimproductcategory',
+        delimiter='/',
+        aws_conn_id='minio',
+        do_xcom_push=True)    
+
+        verify_productcategory_bronze >> silver_dimproductcategory_spark_operator >> monitor_silver_dimproductcategory_spark_operator >> list_silver_example_dimproductcategory_folder
+
+
+    [dimcustomer_silver(),dimcurrency_silver(),dimproductcategory_silver()] 
+    
 
 
 dag = example_silver()
