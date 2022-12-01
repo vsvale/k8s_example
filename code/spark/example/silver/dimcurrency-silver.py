@@ -61,9 +61,6 @@ if __name__ == '__main__':
     )
     )
 
-    stream_table.show()
-    stream_table.printSchema()
-
     # write to silver
     if DeltaTable.isDeltaTable(spark, destination_folder):
         dt_table = DeltaTable.forPath(spark, destination_folder)
@@ -98,9 +95,6 @@ if __name__ == '__main__':
         .load(destination_folder)
     
     destiny_count = destiny.count()
-
-    print(origin_count)
-    print(destiny_count)
 
     if origin_count != destiny_count:
         raise AssertionError("Counts of origin and destiny are not equal")

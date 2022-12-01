@@ -3,8 +3,7 @@ import settings
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from pyspark import SparkConf
-from pyspark.sql.functions import current_timestamp, current_date, col, lit, when
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType
+from pyspark.sql.functions import col, lit
 from schemas import schemaproductcategory
 # main spark program
 # init application
@@ -27,9 +26,6 @@ if __name__ == '__main__':
         .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
         .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog") \
         .getOrCreate()
-
-    # show configured parameters
-    print(SparkConf().getAll())
 
     # set log level
     spark.sparkContext.setLogLevel("INFO")
