@@ -1,4 +1,4 @@
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType, BooleanType,DecimalType ,FloatType, DoubleType, ByteType
+from pyspark.sql.types import StructType,BinaryType, StructField, IntegerType, StringType, TimestampType, DateType, BooleanType,DecimalType ,FloatType, DoubleType, ByteType
 
 schemadimdate = StructType(
     [
@@ -172,7 +172,7 @@ schemadimsalesterritory = StructType(
         StructField('SalesTerritoryRegion',StringType(),True),
         StructField('SalesTerritoryCountry',StringType(),True),
         StructField('SalesTerritoryGroup',StringType(),True),
-        StructField('SalesTerritoryImage',ByteType(),True),
+        StructField('SalesTerritoryImage',BinaryType(),True),
     ]
 )
 

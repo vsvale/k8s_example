@@ -39,15 +39,36 @@ if __name__ == '__main__':
     destination_folder = "s3a://lakehouse/gold/example/dimsalesterritory/"
     write_delta_mode = "overwrite"
 
+    # read from destination
+    dimsalesterritory_df = spark.read.jdbc(settings.YUGABYTEDB_JDBC, destination_table,
+        properties={"user": settings.YUGABYTEDB_USER, "password": settings.YUGABYTEDB_PSWD})
+
+    dimsalesterritory_df = spark.createDataFrame(dimsalesterritory_df.rdd,schema=schemadimsalesterritory)
+
+    # write to gold
+    if DeltaTable.isDeltaTable(spark, destination_folder):
+        dt_table = DeltaTable.forPath(spark, destination_folder)
+        dt_table.alias("historical_data")\
+            .merge(
+                dimsalesterritory_df.alias("new_data"),
+                '''
+                historical_data.SalesTerritoryKey = new_data.SalesTerritoryKey 
+                ''')\
+            .whenMatchedUpdateAll()\
+            .whenNotMatchedInsertAll()
+    else:
+        dimsalesterritory_df.write\
+            .mode(write_delta_mode)\
+            .format("delta")\
+            .save(destination_folder)
+
     # reading data from apache kafka
-    # stream operation mode
-    # latest offset recorded on kafka and spark
     stream_table= spark \
         .read\
         .format("kafka") \
         .option("kafka.bootstrap.servers", settings.BOOTSTRAP_SERVERS) \
         .option("subscribe", input_topic) \
-        .option("startingOffsets", "latest") \
+        .option("startingOffsets", "earliest") \
         .option("checkpoint", "checkpoint") \
         .load() \
         .select(from_json(col("value").cast("string"), schema, jsonOptions).alias("table_tpc"))
@@ -64,76 +85,31 @@ if __name__ == '__main__':
     )
     )
 
-    dimsalesterritory_df = spark.read.jdbc(settings.YUGABYTEDB_JDBC, destination_table,
-        properties={"user": settings.YUGABYTEDB_USER, "password": settings.YUGABYTEDB_PSWD}).load()
+    stream_table_col = spark.createDataFrame(stream_table_col.rdd,schema=schemadimsalesterritory)
 
-    current_df = (
-        dimsalesterritory_df.alias("pg")
-        .join(stream_table_col.alias("kfk"),on=[col("pg.SalesTerritoryKey")==col("kfk.SalesTerritoryKey")],how="left")
-    )
-    current_df = current_df.where((col("pg.SalesTerritoryKey").isNotNull()) & (col("kfk.SalesTerritoryKey").isNull()))
-    current_df = current_df.select(
-        col("pg.SalesTerritoryKey").alias("SalesTerritoryKey"),
-        col("pg.SalesTerritoryAlternateKey").alias("SalesTerritoryAlternateKey"),
-        col("pg.SalesTerritoryRegion").alias("SalesTerritoryRegion"),
-        col("pg.SalesTerritoryCountry").alias("SalesTerritoryCountry"),
-        col("pg.SalesTerritoryGroup").alias("SalesTerritoryGroup"),
-        col("pg.SalesTerritoryImage").alias("SalesTerritoryImage"),
-    )
-
-    update_df = (
-        dimsalesterritory_df.alias("pg")
-        .join(stream_table_col.alias("kfk"),on=[col("pg.SalesTerritoryKey")==col("kfk.SalesTerritoryKey")],how="inner")
-    )
-    update_df = update_df.select(
-        col("kfk.SalesTerritoryKey").alias("SalesTerritoryKey"),
-        col("kfk.SalesTerritoryAlternateKey").alias("SalesTerritoryAlternateKey"),
-        col("kfk.SalesTerritoryRegion").alias("SalesTerritoryRegion"),
-        col("kfk.SalesTerritoryCountry").alias("SalesTerritoryCountry"),
-        col("kfk.SalesTerritoryGroup").alias("SalesTerritoryGroup"),
-        col("kfk.SalesTerritoryImage").alias("SalesTerritoryImage"),
-    )
-
-    insert_df = (
-        stream_table_col.alias("kfk")
-        .join(dimsalesterritory_df.alias("pg"),on=[col("pg.SalesTerritoryKey")==col("kfk.SalesTerritoryKey")],how="left")
-    )
-    insert_df = insert_df.where((col("kfk.SalesTerritoryKey").isNotNull()) & (col("pg.SalesTerritoryKey").isNull()))
-    insert_df = insert_df.select(
-        col("kfk.SalesTerritoryKey").alias("SalesTerritoryKey"),
-        col("kfk.SalesTerritoryAlternateKey").alias("SalesTerritoryAlternateKey"),
-        col("kfk.SalesTerritoryRegion").alias("SalesTerritoryRegion"),
-        col("kfk.SalesTerritoryCountry").alias("SalesTerritoryCountry"),
-        col("kfk.SalesTerritoryGroup").alias("SalesTerritoryGroup"),
-        col("kfk.SalesTerritoryImage").alias("SalesTerritoryImage"),
-    )
-
-    aux_df = current_df.union(update_df)
-    final_df = aux_df.union(insert_df)
-
-    final_df.write \
-    .jdbc(settings.YUGABYTEDB_JDBC, destination_table, mode="append", truncate="true",
-          properties={"user": settings.YUGABYTEDB_USER, "password": settings.YUGABYTEDB_PSWD}).insertInto(destination_table)
-
-    # save into gold
-    gold_table = spark.createDataFrame(final_df.rdd,schema=schemadimsalesterritory)
-
-    # write to gold
     if DeltaTable.isDeltaTable(spark, destination_folder):
         dt_table = DeltaTable.forPath(spark, destination_folder)
         dt_table.alias("historical_data")\
             .merge(
-                gold_table.alias("new_data"),
+                stream_table_col.alias("new_data"),
                 '''
                 historical_data.SalesTerritoryKey = new_data.SalesTerritoryKey 
                 ''')\
             .whenMatchedUpdateAll()\
             .whenNotMatchedInsertAll()
     else:
-        gold_table.write\
+        stream_table_col.write\
             .mode(write_delta_mode)\
             .format("delta")\
             .save(destination_folder)
+
+    final_df = spark.read.format("delta").load(destination_folder)
+
+    final_df.write \
+    .jdbc(settings.YUGABYTEDB_JDBC, destination_table, mode="append",
+          properties={"user": settings.YUGABYTEDB_USER, "password": settings.YUGABYTEDB_PSWD, "truncate":"true"}).insertInto(destination_table)
+
+
 
 
     spark.stop()
