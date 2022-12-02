@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # set configs
     spark = SparkSession \
         .builder \
-        .appName("example-customer-silver-py") \
+        .appName("example-dimcustomer-silver-py") \
         .config("spark.hadoop.fs.s3a.endpoint", settings.S3ENDPOINT) \
         .config("spark.hadoop.fs.s3a.access.key", settings.S3ACCESSKEY) \
         .config("spark.hadoop.fs.s3a.secret.key", settings.S3SECRETKEY) \

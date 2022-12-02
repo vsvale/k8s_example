@@ -8,6 +8,7 @@ from airflow.providers.amazon.aws.operators.s3_delete_objects import S3DeleteObj
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
 from airflow.providers.amazon.aws.operators.s3_list import S3ListOperator
+from astro import sql as aql
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
 LAKEHOUSE = getenv("LAKEHOUSE", "lakehouse")
@@ -27,7 +28,7 @@ default_args = {
 description = "DAG to create dim and facts and save in gold and YugabyteDB"
 
 @dag(schedule='@daily', default_args=default_args,catchup=False,
-tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB'],description=description)
+tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk'],description=description)
 def example_gold():
    
     @task_group()
@@ -55,6 +56,9 @@ def example_gold():
         delimiter='/',
         aws_conn_id='minio',
         do_xcom_push=True)
+
+        #
+        #load_gold = aql.load_file()
 
         gold_dimsalesterritory_spark_operator >> monitor_gold_dimsalesterritory_spark_operator >> list_gold_example_dimsalesterritory_folder
     dimsalesterritory_gold()

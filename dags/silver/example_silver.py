@@ -263,9 +263,57 @@ def example_silver():
 
         silver_dimdate_spark_operator >> monitor_silver_dimdate_spark_operator >> list_silver_example_dimdate_folder
 
+    @task_group()
+    def dimgeography_silver():
+        # verify if new data has arrived on gold bucket
+        verify_dimsalesterritory_gold = S3KeySensor(
+        task_id='tverify_dimsalesterritory_gold',
+        bucket_name=LAKEHOUSE,
+        bucket_key='gold/example/dimsalesterritory/*.parquet',
+        wildcard_match=True,
+        timeout=18 * 60 * 60,
+        poke_interval=120,
+        aws_conn_id='minio')
 
-    [dimcustomer_silver(),dimcurrency_silver(),dimdate_silver()]
-    [dimproductcategory_silver() >> dimproduct_silver()]
+        # verify if new data has arrived on bronze bucket
+        verify_address_bronze = S3KeySensor(
+        task_id='t_verify_address_bronze',
+        bucket_name=LAKEHOUSE,
+        bucket_key='bronze/example/address/*/*.parquet',
+        wildcard_match=True,
+        timeout=18 * 60 * 60,
+        poke_interval=120,
+        aws_conn_id='minio')
+
+        # use spark-on-k8s to operate against the data
+        silver_dimgeography_spark_operator = SparkKubernetesOperator(
+        task_id='t_silver_dimgeography_spark_operator',
+        namespace='processing',
+        application_file='example-dimgeography-silver.yaml',
+        kubernetes_conn_id='kubeconnect',
+        do_xcom_push=True)
+
+        # monitor spark application using sensor to determine the outcome of the task
+        monitor_silver_dimgeography_spark_operator = SparkKubernetesSensor(
+        task_id='t_monitor_silver_dimgeography_spark_operator',
+        namespace="processing",
+        application_name="{{ task_instance.xcom_pull(task_ids='dimgeography_silver.t_silver_dimgeography_spark_operator')['metadata']['name'] }}",
+        kubernetes_conn_id="kubeconnect")
+
+        # Confirm files are created
+        list_silver_example_dimgeography_folder = S3ListOperator(
+        task_id='t_list_silver_example_dimgeography_folder',
+        bucket=LAKEHOUSE,
+        prefix='silver/example/dimgeography',
+        delimiter='/',
+        aws_conn_id='minio',
+        do_xcom_push=True)    
+
+        [verify_dimsalesterritory_gold,verify_address_bronze] >> silver_dimgeography_spark_operator >> monitor_silver_dimgeography_spark_operator >> list_silver_example_dimgeography_folder
+
+    [dimcurrency_silver(),dimdate_silver()]
+    dimproductcategory_silver() >> dimproduct_silver()
+    dimgeography_silver()>> dimcustomer_silver()
     
 
 

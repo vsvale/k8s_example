@@ -106,10 +106,7 @@ if __name__ == '__main__':
     final_df = spark.read.format("delta").load(destination_folder).distinct()
 
     final_df.write \
-    .jdbc(settings.YUGABYTEDB_JDBC, destination_table, mode="append",
-          properties={"user": settings.YUGABYTEDB_USER, "password": settings.YUGABYTEDB_PSWD, "truncate":"true"}).insertInto(destination_table)
-
-
-
+    .jdbc(settings.YUGABYTEDB_JDBC, destination_table, mode="overwrite",
+          properties={"user": settings.YUGABYTEDB_USER, "password": settings.YUGABYTEDB_PSWD, "truncate":"true"})
 
     spark.stop()
