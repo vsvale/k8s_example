@@ -7,4 +7,6 @@ apache-airflow-providers-common-sql>=1.2.0
 psycopg2>=2.8.0
 apache-airflow-providers-postgres==5.2.2
 SQLAlchemy==1.4.27
-
+airflow-provider-great-expectations>=0.1.4
+astro
+astronomer-providers==1.10.0

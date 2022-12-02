@@ -103,7 +103,7 @@ if __name__ == '__main__':
             .format("delta")\
             .save(destination_folder)
 
-    final_df = spark.read.format("delta").load(destination_folder)
+    final_df = spark.read.format("delta").load(destination_folder).distinct()
 
     final_df.write \
     .jdbc(settings.YUGABYTEDB_JDBC, destination_table, mode="append",
