@@ -1,1 +1,3 @@
 delta-spark
+numpy
+pandas
