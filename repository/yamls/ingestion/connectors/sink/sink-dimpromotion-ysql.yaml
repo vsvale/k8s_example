@@ -2,7 +2,7 @@ apiVersion: "kafka.strimzi.io/v1beta2"
 kind: "KafkaConnector"
 metadata:
   # connector name
-  name: "sink-dimpromotion-ysql-05b34d30"
+  name: "sink-dimpromotion-ysql-05b34d31"
   labels:
     # kafka connect [cluster] name
     strimzi.io/cluster: edh
@@ -20,6 +20,7 @@ spec:
     connection.port: "5433"
     connection.user: "plumber"
     connection.password: "PlumberSDE"
+    connection.url: "jdbc:postgresql://yb-tservers.database.svc.cluster.local:5433/salesdw?user=plumber&password=PlumberSDE"
     db.name: "salesdw"
     insert.mode: "upsert"
     table.name.format: "public.dimpromotion"
