@@ -2,13 +2,12 @@ apiVersion: "kafka.strimzi.io/v1beta2"
 kind: "KafkaConnector"
 metadata:
   # connector name
-  name: "sink-dimpromotion-ysql-05b34d22"
+  name: "sink-dimpromotion-ysql-05b34d23"
   labels:
     # kafka connect [cluster] name
     strimzi.io/cluster: edh
 spec:
-  #class: io.confluent.connect.jdbc.JdbcSinkConnector
-  class: com.yugabyte.jdbc.JdbcSinkConnector
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
   tasksMax: 1
   config:
     key.converter: "io.confluent.connect.avro.AvroConverter"
@@ -19,12 +18,13 @@ spec:
     connection.user: "plumber"
     connection.password: "PlumberSDE"
     connection.attempts: "2"
+    dialect.name: "PostgreSqlDatabaseDialect"
     topics: "dimpromotion_spark_stream_dwfiles"
     table.name.format: "public.dimpromotion"
-    auto.create: "true"
-    auto.evolve: "true"
+    auto.create: "false"
+    auto.evolve: "false"
     insert.mode: "upsert"
     pk.mode: "record_key"
     pk.fields: "PromotionKey"
     batch.size: "1500"
-    delete.enabled: true
+#    delete.enabled: true
