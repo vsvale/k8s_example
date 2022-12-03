@@ -2,30 +2,33 @@ apiVersion: "kafka.strimzi.io/v1beta2"
 kind: "KafkaConnector"
 metadata:
   # connector name
-  name: "sink-dimpromotion-ysql-05b34d29"
+  name: "sink-dimpromotion-ysql-05b34d30"
   labels:
     # kafka connect [cluster] name
     strimzi.io/cluster: edh
 spec:
-  class: com.yb.connect.sink.YBSinkConnector
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
   tasksMax: 1
   config:
-    #key.converter: "io.confluent.connect.avro.AvroConverter"
-    #key.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
-    key.converter: org.apache.kafka.connect.storage.StringConverter
-    #value.converter: org.apache.kafka.connect.storage.StringConverter
+    input.data.format: "AVRO"
+    input.key.format: "AVRO"
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
     value.converter: "io.confluent.connect.avro.AvroConverter"
     value.converter.schema.registry.url: "http://schema-registry-cp-schema-registry:8081"
-    connection.url: "jdbc:postgresql://yb-tservers.database.svc.cluster.local:5433/salesdw"
+    connection.host: "yb-tservers.database.svc.cluster.local"
+    connection.port: "5433"
     connection.user: "plumber"
     connection.password: "PlumberSDE"
+    db.name: "salesdw"
+    insert.mode: "upsert"
+    table.name.format: "public.dimpromotion"
     connection.attempts: "2"
     dialect.name: "PostgreSqlDatabaseDialect"
     topics: "dimpromotion_spark_stream_dwfiles"
-    table.name.format: "public.dimpromotion"
+    table.types: "TABLE"
     auto.create: "false"
     auto.evolve: "false"
-    insert.mode: "upsert"
     pk.mode: "record_key"
     pk.fields: "PromotionKey"
     batch.size: "1500"
