@@ -2,12 +2,12 @@ apiVersion: "kafka.strimzi.io/v1beta2"
 kind: "KafkaConnector"
 metadata:
   # connector name
-  name: "sink-dimpromotion-ysql-05b34d28"
+  name: "sink-dimpromotion-ysql-05b34d29"
   labels:
     # kafka connect [cluster] name
     strimzi.io/cluster: edh
 spec:
-  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  class: com.yb.connect.sink.YBSinkConnector
   tasksMax: 1
   config:
     #key.converter: "io.confluent.connect.avro.AvroConverter"
