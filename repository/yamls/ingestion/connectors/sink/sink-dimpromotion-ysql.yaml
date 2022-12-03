@@ -2,7 +2,7 @@ apiVersion: "kafka.strimzi.io/v1beta2"
 kind: "KafkaConnector"
 metadata:
   # connector name
-  name: "sink-dimpromotion-ysql-05b34d26"
+  name: "sink-dimpromotion-ysql-05b34d27"
   labels:
     # kafka connect [cluster] name
     strimzi.io/cluster: edh
@@ -26,7 +26,7 @@ spec:
     auto.create: "false"
     auto.evolve: "false"
     insert.mode: "upsert"
-    pk.mode: "record_value"
+    pk.mode: "record_key"
     pk.fields: "PromotionKey"
     batch.size: "1500"
-#    delete.enabled: true
+    delete.enabled: true
