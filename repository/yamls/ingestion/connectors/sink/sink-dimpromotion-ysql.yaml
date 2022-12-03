@@ -17,7 +17,7 @@ spec:
     connection.url: "jdbc:postgresql://yb-tservers.database.svc.cluster.local:5433/salesdw?user=plumber&password=PlumberSDE"
     connection.attempts: "2"
     topics: "dimpromotion_spark_stream_dwfiles"
-    table.name.format: "mssql_company"
+    table.name.format: "public.dimpromotion"
     auto.create: "true"
     auto.evolve: "true"
     insert.mode: "upsert"
