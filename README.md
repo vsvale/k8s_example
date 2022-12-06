@@ -153,8 +153,8 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 
 ### dimsalesterritory
 - [Arquivo de origem](code/minio/example/dw-files/salesterritory/dimsalesterritory.csv)
-- [Script processamento stream](code/spark/example/stream/dimsalesterritory-landing.py)
-- [Script from Kafka to YugabyteDB](code/spark/example/gold/dimsalesterritory-gold.py)
+- [Script processamento stream to kafka](code/spark/example/stream/dimsalesterritory-landing.py)
+- [Script processamento batch from Kafka to YugabyteDB](code/spark/example/gold/dimsalesterritory-gold.py)
 - [Dag from Kafka to YugabyteDB](dags/gold/example_gold.py)
 ![dimslaesterritory.png](imgs/dimsalesterritory.png)
 1. Primeiramente realiza a leitura na tabela destino e salva na gold. Em seguida, lê via batch desde do inicio do tópico dimsalesterritory_spark_stream_dwfiles, mergeia e salva na gold.
@@ -162,7 +162,11 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 
 ### dimproductsubcategory
 - [Arquivo de origem](code/minio/example/dw-files/productsubcategory/dimproductsubcategory.csv)
-- [Script processamento stream](code/spark/example/stream/dimproductsubcategory-landing.py)
+- [Script processamento stream to kafka](code/spark/example/stream/dimproductsubcategory-landing.py)
+- [Script processamento stream kafka to silver](code/spark/example/silver/dimproductsubcategory-silver.py)
+- [Script processamento batch silver to YugabyteDB](code/spark/example/gold/dimproductsubcategory-gold.py)
+- [Dag from silver to gold](dags/gold/example_gold.py)
+![dimproductsubcategory.png](imgs/dimproductsubcategory.png)
 
 ### dimproduct
 - As tabelas product, productcategory, productmodel, productmodelproductdescription e product description tem origem do banco OLTP e seus dados são extraidos via kafka connect, salvos em tópicos do Kafka para então serem extraidos novamento pelo Kafka connect e salvos em formato parquet na landing zone no object storage.
