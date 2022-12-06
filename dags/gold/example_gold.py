@@ -144,6 +144,20 @@ def example_gold():
         
         verify_dimproductcategory_silver >> gold_dimproductcategory_spark_operator >> monitor_gold_dimproductcategory_spark_operator >> list_gold_example_dimproductcategory_folder
 
+    @task_group()
+    def dimproduct_gold():
+        # verify if new data has arrived on silver
+        verify_dimproduct_silver = S3KeySensor(
+        task_id='t_verify_dimproductcategory_silver',
+        bucket_name=LAKEHOUSE,
+        bucket_key='silver/example/dimproduct/*.parquet',
+        wildcard_match=True,
+        timeout=18 * 60 * 60,
+        poke_interval=120,
+        aws_conn_id='minio')
+        
+        verify_dimproduct_silver
+
     [dimsalesterritory_gold()]
-    dimproductcategory_gold() >> dimproductsubcategory_gold()           
+    dimproductcategory_gold() >> dimproductsubcategory_gold() >> dimproduct_gold()
 dag = example_gold()
