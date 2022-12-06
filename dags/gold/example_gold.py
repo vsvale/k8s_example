@@ -227,9 +227,9 @@ def example_gold():
         copy_silver_dimproduct_gold = S3CopyObjectOperator(
         task_id='t_copy_silver_dimproduct_gold',
         source_bucket_name=LAKEHOUSE,
-        source_bucket_key='silver/example/dimproduct',
+        source_bucket_key='silver/example/dimproduct/*',
         dest_bucket_name=LAKEHOUSE,
-        dest_bucket_key='gold/example/dimproduct',
+        dest_bucket_key='gold/example/dimproduct/',
         aws_conn_id='minio')
 
         @task
