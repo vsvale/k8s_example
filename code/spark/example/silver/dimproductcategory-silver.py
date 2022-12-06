@@ -4,7 +4,7 @@ from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from pyspark import SparkConf
 from pyspark.sql.functions import col, lit
-from schemas import schemaproductcategory
+from schemas import schemadimproductcategory
 # main spark program
 # init application
 if __name__ == '__main__':
@@ -46,12 +46,12 @@ if __name__ == '__main__':
             col("b.ProductCategoryID").alias("ProductCategoryKey"),
             col("b.ProductCategoryID").alias("ProductCategoryAlternateKey"),
             col("b.name").alias("EnglishProductCategoryName"),
-            lit("").alias("SpanishProductCategoryName"),
-            lit("").alias("FrenchProductCategoryName")
-    )
+            col("b.name").alias("SpanishProductCategoryName"),
+            col("b.name").alias("FrenchProductCategoryName")
+    ).distinct()
     )
 
-    silver_table = spark.createDataFrame(silver_table.rdd,schema=schemaproductcategory)
+    silver_table = spark.createDataFrame(silver_table.rdd,schema=schemadimproductcategory)
 
     # write to silver   
     if DeltaTable.isDeltaTable(spark, destination_folder):
