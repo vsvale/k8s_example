@@ -9,6 +9,7 @@ from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKu
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
 from airflow.providers.amazon.aws.operators.s3_list import S3ListOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
+import pandas as pd
 
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
