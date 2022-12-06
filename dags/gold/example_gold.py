@@ -37,7 +37,7 @@ default_args = {
 description = "DAG to create dim and facts and save in gold and YugabyteDB"
 
 @dag(schedule='@daily', default_args=default_args,catchup=False,
-tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk'],description=description)
+tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk','postgresoperator'],description=description)
 def example_gold():
    
     @task_group()
