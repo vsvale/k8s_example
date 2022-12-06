@@ -54,11 +54,6 @@ if __name__ == '__main__':
                 ''')\
             .whenMatchedUpdateAll()\
             .whenNotMatchedInsertAll()
-    else:
-        dest_table_df.write\
-            .mode(write_delta_mode)\
-            .format("delta")\
-            .save(destination_folder)
 
     # reading from silver
 
@@ -85,6 +80,8 @@ if __name__ == '__main__':
 
 
     final_df = spark.read.format("delta").load(destination_folder).distinct()
+    
+    print(final_df.show())
 
     final_df.write \
     .jdbc(settings.YUGABYTEDB_JDBC, destination_table, mode="overwrite",
