@@ -1,6 +1,6 @@
 # imports
 from datetime import datetime, timedelta
-from airflow.decorators import dag,task_group
+from airflow.decorators import dag,task_group,task
 from airflow.utils.dates import days_ago
 from os import getenv
 from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
