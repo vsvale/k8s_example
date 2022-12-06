@@ -11,8 +11,9 @@ from airflow.providers.amazon.aws.operators.s3_list import S3ListOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 import pandas as pd
 from minio import Minio
-from airflow.providers.amazon.aws.operators.s3_copy_object import S3CopyObjectOperator
 from sqlalchemy import create_engine
+from deltalake.writer import write_deltalake
+from deltalake import DeltaTable
 
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
@@ -223,24 +224,25 @@ def example_gold():
 	            Status Varchar(7) NULL
                 );""")
 
-        # copy file from silver to gold
-        copy_silver_dimproduct_gold = S3CopyObjectOperator(
-        task_id='t_copy_silver_dimproduct_gold',
-        source_bucket_name=LAKEHOUSE,
-        source_bucket_key='silver/example/dimproduct/*',
-        dest_bucket_name=LAKEHOUSE,
-        dest_bucket_key='gold/example/dimproduct/',
-        aws_conn_id='minio')
+        @task
+        def save_dimproduct_gold():
+            client = Minio(MINIO, ACCESS_KEY, SECRET_ACCESS, secure=False)
+            objects = client.get_object(LAKEHOUSE,'silver/example/dimproduct')
+            dt = DeltaTable(objects)
+            path = client.get_object(LAKEHOUSE,'gold/example/dimproduct')
+            write_deltalake(path, dt, mode='overwrite', overwrite_schema=True)
+
 
         @task
         def save_dimproduct_yugabytedb():
             client = Minio(MINIO, ACCESS_KEY, SECRET_ACCESS, secure=False)
             objects = client.get_object(LAKEHOUSE,'gold/example/dimproduct')
-            df = pd.read_parquet(objects)
+            dt = DeltaTable(objects)
+            df = dt.to_pyarrow_table().to_pandas()
             postgres_engine = create_engine(YUGABYTEDB)
             df.to_sql('public.dimproduct', postgres_engine, if_exists='append', index=False, chunksize=100)
 
-        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb] >> create_dimproduct_yugabytedb_tb >> copy_silver_dimproduct_gold >> save_dimproduct_yugabytedb()
+        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb] >> create_dimproduct_yugabytedb_tb >> save_dimproduct_gold() >> save_dimproduct_yugabytedb()
 
     [dimsalesterritory_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold() >> dimproduct_gold()
