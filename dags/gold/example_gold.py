@@ -223,7 +223,16 @@ def example_gold():
 	            Status Varchar(7) NULL
                 );""")
 
-        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb] >> create_dimproduct_yugabytedb_tb
+        # copy file from silver to gold
+        copy_silver_dimproduct_gold = S3CopyObjectOperator(
+        task_id='t_copy_silver_dimproduct_gold',
+        source_bucket_name=LAKEHOUSE,
+        source_bucket_key='silver/example/dimproduct',
+        dest_bucket_name=LAKEHOUSE,
+        dest_bucket_key='gold/example/dimproduct',
+        aws_conn_id='minio')
+
+        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb] >> create_dimproduct_yugabytedb_tb >> copy_silver_dimproduct_gold
 
     [dimsalesterritory_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold() >> dimproduct_gold()
