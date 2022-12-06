@@ -8,6 +8,7 @@ from airflow.providers.amazon.aws.operators.s3_delete_objects import S3DeleteObj
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
 from airflow.providers.amazon.aws.operators.s3_list import S3ListOperator
+from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
