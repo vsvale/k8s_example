@@ -155,8 +155,17 @@ def example_gold():
         timeout=18 * 60 * 60,
         poke_interval=120,
         aws_conn_id='minio')
-        
-        verify_dimproduct_silver
+
+        # list all files inside of a bucket
+        list_silver_example_dimproduct_folder = S3ListOperator(
+        task_id='t_list_silver_example_dimproduct_folder',
+        bucket=LAKEHOUSE,
+        prefix='silver/example/dimproduct',
+        delimiter='/',
+        aws_conn_id='minio',
+        do_xcom_push=True)
+
+        verify_dimproduct_silver >> list_silver_example_dimproduct_folder
 
     [dimsalesterritory_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold() >> dimproduct_gold()
