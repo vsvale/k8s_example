@@ -173,7 +173,13 @@ def example_gold():
         aws_conn_id='minio'
         )
 
-        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> delete_gold_example_dimproduct_folder
+        # delete table to perform full load
+        drop_dimproduct_yugabytedb_tb = PostgresOperator(
+        task_id='t_drop_dimproduct_yugabytedb_tb',
+        postgres_conn_id='yugabytedb_ysql',
+        sql=""" DROP TABLE IF EXISTS public.dimproduct; """)
+
+        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb]
 
     [dimsalesterritory_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold() >> dimproduct_gold()
