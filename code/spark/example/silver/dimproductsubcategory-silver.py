@@ -4,7 +4,6 @@ from pyspark.sql.functions import *
 from delta.tables import DeltaTable
 from pyspark.sql import SparkSession
 from schemas import schemadimproductsubcategory
-from pyspark.sql.types import StructType, StructField, IntegerType, StringType, TimestampType, DateType, FloatType, BooleanType, DoubleType, ByteType
 
 # main spark program
 if __name__ == '__main__':

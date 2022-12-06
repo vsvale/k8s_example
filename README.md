@@ -145,11 +145,29 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 - Tem como origem arquivo disponibilizado na landing zone
 - A ingestão é realiza via stream, o job spark fica rodando constantemente procurando um arquivo na pasta para processar. Quando um arquivo chega cada registro é processado e salvo em modo append em um tópico do kafka
 ![dwfiles_lenses](imgs/dwfiles_lenses.png)
-- Arquivos de origem estão disponíveis em [code/minio/example/dw-files](ode/minio/example/dw-files)
+- Arquivos de origem estão disponíveis em [code/minio/example/dw-files](code/minio/example/dw-files)
 ![miniodwfiles](imgs/miniodwfiles.png)
 - Jobs de ingestão estão disponíveis em [code/spark/example/stream](code/spark/example/stream)
 - Arquivos de configuração estão disponíveis em repository/yamls/spark/structurestream
 - O fluxo do Kafka até o Yugabyte segue em modo batch semelhante ao que acontece no Lake house
+
+### dimsalesterritory
+- [Arquivo de origem](code/minio/example/dw-files/salesterritory/dimsalesterritory.csv)
+- [Script processamento stream](code/spark/example/stream/dimsalesterritory-landing.py)
+- [Script from Kafka to YugabyteDB](code/spark/example/gold/dimsalesterritory-gold.py)
+- [Dag from Kafka to YugabyteDB](dags/gold/example_gold.py)
+![dimslaesterritory.png](imgs/dimsalesterritory.png)
+1. Primeiramente realiza a leitura na tabela destino e salva na gold. Em seguida, lê via batch desde do inicio do tópico dimsalesterritory_spark_stream_dwfiles, mergeia e salva na gold.
+2. A atual public.dimsalesterritory é recriada com o conteudo da gold.
+
+### dimproductsubcategory
+- [Arquivo de origem](code/minio/example/dw-files/productsubcategory/dimproductsubcategory.csv)
+- [Script processamento stream](code/spark/example/stream/dimproductsubcategory-landing.py)
+
+### dimproduct
+- As tabelas product, productcategory, productmodel, productmodelproductdescription e product description tem origem do banco OLTP e seus dados são extraidos via kafka connect, salvos em tópicos do Kafka para então serem extraidos novamento pelo Kafka connect e salvos em formato parquet na landing zone no object storage.
+- Utiliza dados da dimproductsubcategory
+
 
 
 
