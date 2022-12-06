@@ -9,10 +9,10 @@ from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKu
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
 from airflow.providers.amazon.aws.operators.s3_list import S3ListOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
-import pandas as pd
-from minio import Minio
+#import pandas as pd
+#from minio import Minio
 from airflow.providers.amazon.aws.operators.s3_copy_object import S3CopyObjectOperator
-from sqlalchemy import create_engine
+#from sqlalchemy import create_engine
 
 
 
