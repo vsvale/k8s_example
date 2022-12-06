@@ -12,8 +12,8 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 import pandas as pd
 from minio import Minio
 from sqlalchemy import create_engine
-from deltalake.writer import write_deltalake
 from deltalake import DeltaTable
+from deltalake.writer import write_deltalake
 
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
