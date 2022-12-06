@@ -46,8 +46,8 @@ if __name__ == '__main__':
             col("b.ProductCategoryID").alias("ProductCategoryKey"),
             col("b.ProductCategoryID").alias("ProductCategoryAlternateKey"),
             col("b.name").alias("EnglishProductCategoryName"),
-            lit(None).alias("SpanishProductCategoryName"),
-            lit(None).alias("FrenchProductCategoryName")
+            lit("").alias("SpanishProductCategoryName"),
+            lit("").alias("FrenchProductCategoryName")
     )
     )
 

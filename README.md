@@ -168,6 +168,17 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 - [Dag from silver to gold](dags/gold/example_gold.py)
 ![dimproductsubcategory.png](imgs/dimproductsubcategory.png)
 
+### dimproductcategory
+- Origem da tabela productcategory do banco OLTP
+- [Conectores de source e sink](repository/yamls/ingestion/connectors)
+- [Script processamento batch from landing to bronze](code/spark/example/bronze/productcategory-bronze.py)
+- [DAG bronze](dags/bronze/example_bronze.py)
+- [Script processamento batch from bronze to silver](code/spark/example/silver/dimproductcategory-silver.py)
+- [DAG silver](dags/silver/example_silver.py)
+- [Script processamento batch from silver to gold](code/spark/example/gold/dimproductcategory-gold.py)
+- [DAG gold](dags/gold/example_gold.py)
+![dimproductcategory](imgs/dimproductcategory.png)
+
 ### dimproduct
 - As tabelas product, productcategory, productmodel, productmodelproductdescription e product description tem origem do banco OLTP e seus dados são extraidos via kafka connect, salvos em tópicos do Kafka para então serem extraidos novamento pelo Kafka connect e salvos em formato parquet na landing zone no object storage.
 - Utiliza dados da dimproductsubcategory
