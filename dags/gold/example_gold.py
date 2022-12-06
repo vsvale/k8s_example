@@ -165,7 +165,15 @@ def example_gold():
         aws_conn_id='minio',
         do_xcom_push=True)
 
-        verify_dimproduct_silver >> list_silver_example_dimproduct_folder
+        # delete files from gold zone [old file]
+        delete_gold_example_dimproduct_folder = S3DeleteObjectsOperator(
+        task_id='delete_s3_file_landing_zone',
+        bucket=LAKEHOUSE,
+        keys='gold/example/dimproduct',
+        aws_conn_id='minio'
+        )
+
+        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> delete_gold_example_dimproduct_folder
 
     [dimsalesterritory_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold() >> dimproduct_gold()
