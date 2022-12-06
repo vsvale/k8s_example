@@ -232,7 +232,15 @@ def example_gold():
         dest_bucket_key='gold/example/dimproduct',
         aws_conn_id='minio')
 
-        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb] >> create_dimproduct_yugabytedb_tb >> copy_silver_dimproduct_gold
+        @task
+        def save_dimproduct_yugabytedb():
+            client = Minio(MINIO, ACCESS_KEY, SECRET_ACCESS, secure=False)
+            objects = client.get_object(LAKEHOUSE,'gold/example/dimproduct')
+            df = pd.read_parquet(objects)
+            postgres_engine = create_engine(YUGABYTEDB)
+            df.to_sql('public.dimproduct', postgres_engine, if_exists='append', index=False, chunksize=100)
+
+        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb] >> create_dimproduct_yugabytedb_tb >> copy_silver_dimproduct_gold >> save_dimproduct_yugabytedb()
 
     [dimsalesterritory_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold() >> dimproduct_gold()
