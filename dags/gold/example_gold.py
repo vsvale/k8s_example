@@ -10,6 +10,7 @@ from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKube
 from airflow.providers.amazon.aws.operators.s3_list import S3ListOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 import pandas as pd
+from minio import Minio
 
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
