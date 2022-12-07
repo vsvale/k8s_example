@@ -1,14 +1,12 @@
-pyarrow==3.0.0
 apache-airflow-providers-postgres==5.2.2
 apache-airflow-providers-amazon==3.4.0
-astro-sdk-python[amazon,postgres]
+astro-sdk-python[amazon,postgres]==1.2.3
 apache-airflow-providers-cncf-kubernetes==4.4.0
 apache-airflow-providers-common-sql>=1.2.0
 psycopg2>=2.8.0
 SQLAlchemy==1.4.27
-deltalake
-koalas
 apache-airflow-providers-apache-spark>=2.1.3
 minio==7.1.12
 numpy
 pandas>=1.3.4
+astronomer-providers[amazon]==1.12.0
