@@ -16,7 +16,7 @@ from deltalake import DeltaTable
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
 LAKEHOUSE = getenv("LAKEHOUSE", "lakehouse")
-MINIO = getenv("MINIO", "http://172.19.0.2:8686")
+MINIO = getenv("MINIO", "minio.deepstorage.svc.Cluster.local:8686")
 ACCESS_KEY = getenv("ACCESS_KEY", "raat9cl2bEWhbgtQ")
 SECRET_ACCESS = getenv("SECRET_ACCESS", "zcJWBrrGkInYEWXf4Oc37tCIdJVeA0fb")
 YUGABYTEDB = getenv("YUGABYTEDB", "postgresql://plumber:PlumberSDE@yb-tservers.database.svc.Cluster.local:5433/salesdw")
@@ -249,8 +249,12 @@ def example_gold():
         @task
         def save_dimproduct_yugabytedb():
             client = Minio(MINIO, ACCESS_KEY, SECRET_ACCESS, secure=False)
-            objects = client.get_object(LAKEHOUSE,'gold/example/dimproduct')
-            dt = DeltaTable(objects)
+            try:
+                response = client.get_object(LAKEHOUSE,'gold/example/dimproduct/*.parquet')
+            finally:
+                response.close()
+                response.release_conn()
+            dt = DeltaTable(response)
             df = dt.to_pyarrow_table().to_pandas()
             postgres_engine = create_engine(YUGABYTEDB)
             df.to_sql('public.dimproduct', postgres_engine, if_exists='append', index=False, chunksize=100)
