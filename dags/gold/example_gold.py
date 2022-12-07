@@ -16,7 +16,7 @@ from deltalake import DeltaTable
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
 LAKEHOUSE = getenv("LAKEHOUSE", "lakehouse")
-MINIO = getenv("MINIO", "minio.deepstorage.svc.Cluster.local:8686")
+MINIO = getenv("MINIO", "minio.deepstorage.svc.Cluster.local:9000")
 ACCESS_KEY = getenv("ACCESS_KEY", "raat9cl2bEWhbgtQ")
 SECRET_ACCESS = getenv("SECRET_ACCESS", "zcJWBrrGkInYEWXf4Oc37tCIdJVeA0fb")
 YUGABYTEDB = getenv("YUGABYTEDB", "postgresql://plumber:PlumberSDE@yb-tservers.database.svc.Cluster.local:5433/salesdw")
@@ -221,18 +221,41 @@ def example_gold():
 	            EndDate Timestamp(3) NULL,
 	            Status Varchar(7) NULL
                 );""")
+        
+        # use spark-on-k8s to operate against the data
+        gold_dimproduct_spark_operator = SparkKubernetesOperator(
+        task_id='t_gold_dimproduct_spark_operator',
+        namespace='processing',
+        application_file='example-dimproduct-gold.yaml',
+        kubernetes_conn_id='kubeconnect',
+        do_xcom_push=True)
 
+        # monitor spark application using sensor to determine the outcome of the task
+        monitor_gold_dimproduct_spark_operator = SparkKubernetesSensor(
+        task_id='t_monitor_gold_dimproduct_spark_operator',
+        namespace="processing",
+        application_name="{{ task_instance.xcom_pull(task_ids='dimproduct_gold.t_gold_dimproduct_spark_operator')['metadata']['name'] }}",
+        kubernetes_conn_id="kubeconnect")
+
+        # Confirm files are created
+        list_gold_example_dimproduct_folder = S3ListOperator(
+        task_id='t_list_gold_example_dimproduct_folder',
+        bucket=LAKEHOUSE,
+        prefix='gold/example/dimproduct',
+        delimiter='/',
+        aws_conn_id='minio',
+        do_xcom_push=True)
 
         @task
         def save_dimproduct_yugabytedb():
             client = Minio(MINIO, ACCESS_KEY, SECRET_ACCESS, secure=False)
-            objects = client.get_object(LAKEHOUSE,'silver/example/dimproduct')
+            objects = client.get_object(LAKEHOUSE,'gold/example/dimproduct')
             dt = DeltaTable(objects)
             df = dt.to_pyarrow_table().to_pandas()
             postgres_engine = create_engine(YUGABYTEDB)
             df.to_sql('public.dimproduct', postgres_engine, if_exists='append', index=False, chunksize=100)
 
-        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb] >> create_dimproduct_yugabytedb_tb >> save_dimproduct_yugabytedb()
+        verify_dimproduct_silver >> list_silver_example_dimproduct_folder >> [delete_gold_example_dimproduct_folder,drop_dimproduct_yugabytedb_tb] >> create_dimproduct_yugabytedb_tb >> gold_dimproduct_spark_operator >> monitor_gold_dimproduct_spark_operator >> list_gold_example_dimproduct_folder >> save_dimproduct_yugabytedb()
 
     [dimsalesterritory_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold() >> dimproduct_gold()
