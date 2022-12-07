@@ -16,7 +16,7 @@ from deltalake import DeltaTable
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
 LAKEHOUSE = getenv("LAKEHOUSE", "lakehouse")
-MINIO = getenv("MINIO", "minio.deepstorage.svc.Cluster.local:9000")
+MINIO = getenv("MINIO", "http://172.19.0.2:8686")
 ACCESS_KEY = getenv("ACCESS_KEY", "raat9cl2bEWhbgtQ")
 SECRET_ACCESS = getenv("SECRET_ACCESS", "zcJWBrrGkInYEWXf4Oc37tCIdJVeA0fb")
 YUGABYTEDB = getenv("YUGABYTEDB", "postgresql://plumber:PlumberSDE@yb-tservers.database.svc.Cluster.local:5433/salesdw")
