@@ -3,11 +3,10 @@ from datetime import datetime, timedelta
 from airflow.decorators import dag,task_group
 from airflow.utils.dates import days_ago
 from os import getenv
-from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
-from airflow.providers.amazon.aws.operators.s3_delete_objects import S3DeleteObjectsOperator
+from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
-from airflow.providers.amazon.aws.operators.s3_list import S3ListOperator
+from airflow.providers.amazon.aws.operators.s3 import S3ListOperator
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
 LAKEHOUSE = getenv("LAKEHOUSE", "lakehouse")
