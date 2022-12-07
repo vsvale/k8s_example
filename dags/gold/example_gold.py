@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from airflow.decorators import dag,task_group,task
 from airflow.utils.dates import days_ago
 from os import getenv
-from airflow.providers.amazon.aws.sensors.s3_key import S3KeySensor
+from airflow.operators.sensors import S3KeySensor
 from airflow.providers.amazon.aws.operators.s3_delete_objects import S3DeleteObjectsOperator
 from airflow.providers.cncf.kubernetes.operators.spark_kubernetes import SparkKubernetesOperator
 from airflow.providers.cncf.kubernetes.sensors.spark_kubernetes import SparkKubernetesSensor
@@ -149,7 +149,7 @@ def example_gold():
         aws_conn_id='minio'
         )
         sensor_landing_example_factinternetsalesreason
-        
+
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
