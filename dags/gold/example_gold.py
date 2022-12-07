@@ -13,7 +13,6 @@ import pandas as pd
 from minio import Minio
 from sqlalchemy import create_engine
 from deltalake import DeltaTable
-from deltalake.writer import write_deltalake
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
 LAKEHOUSE = getenv("LAKEHOUSE", "lakehouse")
