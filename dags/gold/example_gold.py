@@ -250,7 +250,7 @@ def example_gold():
         def save_dimproduct_yugabytedb():
             client = Minio(MINIO, ACCESS_KEY, SECRET_ACCESS, secure=False)
             try:
-                response = client.get_object(LAKEHOUSE,'gold/example/dimproduct/*.parquet')
+                response = client.get_object(LAKEHOUSE,'silver/example/dimproduct/')
             finally:
                 response.close()
                 response.release_conn()
