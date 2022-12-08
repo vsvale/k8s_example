@@ -168,7 +168,7 @@ def example_gold():
         columns_names_capitalization="original"
         )
 
-        [sensor_landing_example_salesreason,sensor_landing_example_salesreason_async,loads_s3_to_yugabytedb]
+        sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
 
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
