@@ -146,18 +146,15 @@ def example_gold():
         task_id='t_sensor_landing_example_salesreason_async',
         bucket_name=LANDING_ZONE,
         bucket_key='example/dw-files/internetsalesreason/*',
-        wildcard_match = 'true',
+        wildcard_match = True,
         aws_conn_id='minio'
         )
 
-        # verify if new data has arrived on silver
         sensor_landing_example_salesreason = S3KeySensor(
         task_id='t_sensor_landing_example_salesreason',
         bucket_name=LANDING_ZONE,
-        bucket_key='example/dw-files/internetsalesreason/*.csv',
+        bucket_key='example/dw-files/internetsalesreason/*',
         wildcard_match=True,
-        timeout=18 * 60 * 60,
-        poke_interval=120,
         aws_conn_id='minio')
 
         loads_s3_to_yugabytedb = aql.load_file(
@@ -178,8 +175,7 @@ def example_gold():
         columns_names_capitalization="original"
         )
 
-        sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
-
+        [sensor_landing_example_salesreason, sensor_landing_example_salesreason_async]
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
