@@ -144,7 +144,7 @@ def example_gold():
         sensor_landing_example_salesreason = S3KeySensorAsync(
         task_id='t_sensor_landing_example_salesreason',
         bucket_name=LANDING_ZONE,
-        prefix='example/dw-files/internetsalesreason/factinternetsalesreason.csv',
+        bucket_key='example/dw-files/internetsalesreason/factinternetsalesreason.csv',
         verify='false',
         aws_conn_id='minio'
         )
