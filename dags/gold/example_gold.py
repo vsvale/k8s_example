@@ -145,6 +145,7 @@ def example_gold():
         task_id='t_sensor_landing_example_salesreason',
         bucket_name=LANDING_ZONE,
         bucket_key='example/dw-files/internetsalesreason/*',
+        wildcard_match = 'true',
         aws_conn_id='minio'
         )
         sensor_landing_example_salesreason
