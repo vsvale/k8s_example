@@ -166,7 +166,7 @@ def example_silver():
         verify_productsubcategory_bronze = S3KeySensor(
         task_id='t_verify_productsubcategory_bronze',
         bucket_name=LAKEHOUSE,
-        bucket_key='silver/example/dimproductsubcategory/*/*.parquet',
+        bucket_key='silver/example/dimproductsubcategory/*.parquet',
         wildcard_match=True,
         timeout=18 * 60 * 60,
         poke_interval=120,
