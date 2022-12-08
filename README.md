@@ -66,7 +66,7 @@
 - PASSWORD: admin
 - necessário criar as conexões:
   - kubernetes Connection: {"name":"kubeconnect", "in-cluster":true} 
-  - MiniO Connection: {"aws_access_key_id": "YOURACCESSKEY", "aws_secret_access_key": "YOURSECRETKEY", "endpoint_url": "http://172.19.0.2:8686","region_name":"vale-home"}
+  - MiniO Connection: {"aws_access_key_id": "YOURACCESSKEY", "aws_secret_access_key": "YOURSECRETKEY", "endpoint_url": "http://172.19.0.3:8686"}
   - YugabyteDB Connection: {"name": "yugabytedb_ysql", "host": "yb-tservers.database.svc.cluster.local", "schema": "salesdw", "login": "plumber", "password": "PlumberSDE", "port": "5433"}
 
 {
