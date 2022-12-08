@@ -145,6 +145,8 @@ def example_gold():
         task_id='t_sensor_landing_example_salesreason',
         bucket_name=LANDING_ZONE,
         prefix='example/dw-files/internetsalesreason/factinternetsalesreason.csv',
+        delimiter='/',
+        verify='false',
         aws_conn_id='minio'
         )
         sensor_landing_example_salesreason
