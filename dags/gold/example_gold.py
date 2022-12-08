@@ -145,7 +145,7 @@ def example_gold():
         sensor_landing_example_salesreason = S3KeySensor(
         task_id='t_sensor_landing_example_salesreason',
         bucket_name=LANDING_ZONE,
-        bucket_key='example/dw-files/internetsalesreason/*',
+        bucket_key='example/dw-files/internetsalesreason/*.csv',
         wildcard_match=True,
         timeout=18 * 60 * 60,
         poke_interval=120,
