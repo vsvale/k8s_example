@@ -13,6 +13,7 @@ from astro import sql as aql
 from astro.files import File
 from astro.constants import FileType
 from astro.sql.table import Table, Metadata
+import sqlalchemy
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
 LAKEHOUSE = getenv("LAKEHOUSE", "lakehouse")
@@ -162,9 +163,18 @@ def example_gold():
         loads_s3_to_yugabytedb = aql.load_file(
         task_id="t_loads_s3_to_yugabytedb",
         input_file=File(path=LANDING_ZONE + f"example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
-        output_table=Table(name="factinternetsalesreason", conn_id='yugabytedb_ysql'),
+        output_table=Table(
+            name="factinternetsalesreason",
+            conn_id='yugabytedb_ysql',
+            columns=[
+                sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
+                sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
+                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesOrderNumber")
+            ],
+        
+        ),
         if_exists="replace",
-        use_native_support=True,
+        use_native_support=False,
         columns_names_capitalization="original"
         )
 
