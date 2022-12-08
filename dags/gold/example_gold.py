@@ -151,7 +151,16 @@ def example_gold():
         poke_interval=120,
         aws_conn_id='minio')
 
-        sensor_landing_example_salesreason
+        loads_s3_to_yugabytedb = aql.load_file(
+        task_id="t_loads_s3_to_yugabytedb",
+        input_file=File(path=LANDING_ZONE + f"example/dw-files/internetsalesreason/*.csv", filetype=FileType.CSV, conn_id='minio'),
+        output_table=Table(name="public.factinternetsalesreason", conn_id='yugabytedb_ysql'),
+        if_exists="replace",
+        use_native_support=True,
+        columns_names_capitalization="original"
+        )
+
+        sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
 
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
