@@ -141,13 +141,13 @@ def example_gold():
 
     @task_group()
     def factinternetsalesreason_gold():
-        sensor_landing_example_factinternetsalesreason = S3PrefixSensorAsync(
-        task_id='t_sensor_landing_example_factinternetsalesreason',
-        bucket_name=LAKEHOUSE,
-        prefix='landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv',
+        sensor_landing_example_salesreason = S3PrefixSensorAsync(
+        task_id='t_sensor_landing_example_salesreason',
+        bucket_name=LANDING_ZONE,
+        prefix='example/dw-files/internetsalesreason/factinternetsalesreason.csv',
         aws_conn_id='minio'
         )
-        sensor_landing_example_factinternetsalesreason
+        sensor_landing_example_salesreason
 
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
