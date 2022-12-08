@@ -141,13 +141,16 @@ def example_gold():
 
     @task_group()
     def factinternetsalesreason_gold():
-        sensor_landing_example_salesreason = S3KeySensorAsync(
+        # verify if new data has arrived on silver
+        sensor_landing_example_salesreason = S3KeySensor(
         task_id='t_sensor_landing_example_salesreason',
         bucket_name=LANDING_ZONE,
         bucket_key='example/dw-files/internetsalesreason/*',
-        wildcard_match = 'true',
-        aws_conn_id='minio'
-        )
+        wildcard_match=True,
+        timeout=18 * 60 * 60,
+        poke_interval=120,
+        aws_conn_id='minio')
+
         sensor_landing_example_salesreason
 
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
