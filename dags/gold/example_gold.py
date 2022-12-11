@@ -155,12 +155,12 @@ def example_gold():
         task_id="t_loads_s3_to_yugabytedb",
         input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
         output_table=Table(
-            name="factinternetsalesreason",
+            name="public.factinternetsalesreason",
             conn_id='yugabytedb_ysql',
             columns=[
                 sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
                 sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
-                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesOrderNumber")
+                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
             ],
         
         ),
