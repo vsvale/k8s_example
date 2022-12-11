@@ -162,13 +162,14 @@ def example_gold():
                 sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
                 sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
             ],
-            metadata=Metadata(schema="public")
+            metadata=Metadata(schema="public",database="salesdw")
         
         ),
         if_exists="replace",
         use_native_support=False,
         columns_names_capitalization="original"
         )
+        return True
 
         sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
