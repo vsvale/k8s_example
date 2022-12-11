@@ -142,40 +142,35 @@ def example_gold():
 
     @task_group()
     def factinternetsalesreason_gold():
-        sensor_landing_example_salesreason_async = S3KeySensorAsync(
-        task_id='t_sensor_landing_example_salesreason_async',
-        bucket_name=LANDING_ZONE,
-        bucket_key='example/dw-files/internetsalesreason/*',
-        wildcard_match = True,
-        aws_conn_id='minio'
-        )
-
         sensor_landing_example_salesreason = S3KeySensor(
         task_id='t_sensor_landing_example_salesreason',
         bucket_name=LANDING_ZONE,
         bucket_key='example/dw-files/internetsalesreason/*',
         wildcard_match=True,
+        timeout=18 * 60 * 60,
+        poke_interval=120,
         aws_conn_id='minio')
-#
-#        loads_s3_to_yugabytedb = aql.load_file(
-#        task_id="t_loads_s3_to_yugabytedb",
-#        input_file=File(path=LANDING_ZONE + f"/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
-#        output_table=Table(
-#            name="factinternetsalesreason",
-#            conn_id='yugabytedb_ysql',
-#            columns=[
-#                sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
-#                sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
-#                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesOrderNumber")
-#            ],
-#        
-#        ),
-#        if_exists="replace",
-#        use_native_support=False,
-#        columns_names_capitalization="original"
-#        )
 
-        [sensor_landing_example_salesreason, sensor_landing_example_salesreason_async]
+
+        loads_s3_to_yugabytedb = aql.load_file(
+        task_id="t_loads_s3_to_yugabytedb",
+        input_file=File(path=LANDING_ZONE + f"/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
+        output_table=Table(
+            name="factinternetsalesreason",
+            conn_id='yugabytedb_ysql',
+            columns=[
+                sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
+                sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
+                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesOrderNumber")
+            ],
+        
+        ),
+        if_exists="replace",
+        use_native_support=False,
+        columns_names_capitalization="original"
+        )
+
+        sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
