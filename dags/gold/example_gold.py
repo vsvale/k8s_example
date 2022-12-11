@@ -162,6 +162,7 @@ def example_gold():
                 sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
                 sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
             ],
+            metadata=Metadata(schema="public")
         
         ),
         if_exists="replace",
