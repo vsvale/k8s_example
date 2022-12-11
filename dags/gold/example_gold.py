@@ -169,6 +169,7 @@ def example_gold():
         use_native_support=True,
         columns_names_capitalization="original"
         )
+        aql.cleanup()
         
         sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
