@@ -166,11 +166,10 @@ def example_gold():
         
         ),
         if_exists="replace",
-        use_native_support=False,
+        use_native_support=True,
         columns_names_capitalization="original"
         )
-        return True
-
+        
         sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
