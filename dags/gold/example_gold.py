@@ -153,7 +153,7 @@ def example_gold():
 
         loads_s3_to_yugabytedb = aql.load_file(
         task_id="t_loads_s3_to_yugabytedb",
-        input_file=File(path="s3:///landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
+        input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
         output_table=Table(
             name="factinternetsalesreason",
             conn_id='yugabytedb_ysql',
