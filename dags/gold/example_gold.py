@@ -168,7 +168,6 @@ def example_gold():
         if_exists="replace",
         use_native_support=True,
         columns_names_capitalization="original",
-        xcom_push=False,
         )
 
         
