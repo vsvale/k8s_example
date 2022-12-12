@@ -151,10 +151,15 @@ def example_gold():
         poke_interval=120,
         aws_conn_id='minio')
 
-        loads_s3_to_yugabytedb = aql.load_file(
-        task_id="t_loads_s3_to_yugabytedb",
-        input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
-        output_table=Table(
+        extract_sales_reason = (aql.load_file(
+        task_id="t_extract_sales_reason",
+        input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv",filetype=FileType.CSV, conn_id='minio'),
+        columns_names_capitalization="original",
+        )).columns=['SalesOrderNumber','SalesOrderLineNumber','SalesReasonKey']
+
+
+        loads_to_yugabytedb = aql.merge(
+            target_table=Table(
             name="factinternetsalesreason",
             conn_id='yugabytedb_ysql',
             columns=[
@@ -165,14 +170,35 @@ def example_gold():
             metadata=Metadata(schema="public",database="salesdw")
         
         ),
-        if_exists="replace",
-        use_native_support=True,
-        columns_names_capitalization="original",
+        source_table=extract_sales_reason,
+        target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
+        columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
+        if_conflicts="update",
         )
 
+
+#        loads_s3_to_yugabytedb = aql.load_file(
+#        task_id="t_loads_s3_to_yugabytedb",
+#        input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
+#        output_table=Table(
+#            name="factinternetsalesreason",
+#            conn_id='yugabytedb_ysql',
+#            columns=[
+#                sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
+#                sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
+#                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
+#            ],
+#            metadata=Metadata(schema="public",database="salesdw")
+#        
+#        ),
+#        if_exists="replace",
+#        use_native_support=True,
+#        columns_names_capitalization="original",
+#        )
+#
         
         
-        sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
+        sensor_landing_example_salesreason >> loads_to_yugabytedb
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
