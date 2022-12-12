@@ -172,7 +172,7 @@ def example_gold():
 
         
         
-        sensor_landing_example_salesreason >> loads_s3_to_yugabytedb >> aql.cleanup()
+        sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
