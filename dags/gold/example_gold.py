@@ -216,7 +216,7 @@ def example_gold():
 #
         
         
-        sensor_landing_example_salesreason >> loads_to_yugabytedb
+        sensor_landing_example_salesreason >> extract_sales_reason
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
