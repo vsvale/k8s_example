@@ -185,7 +185,7 @@ def example_gold():
             metadata=Metadata(schema="public",database="salesdw"),
         ),
         source_table=loads_s3_to_temp,
-        target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
+        target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber"],
         columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         if_conflicts="update",
         )
