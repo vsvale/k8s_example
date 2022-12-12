@@ -38,6 +38,12 @@ def schema_enforce_salesreason(df: DataFrame):
     schema_enforce = df.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
     return schema_enforce
 
+@aql.transform
+def to_table(input_dataframe: DataFrame):
+    return """
+            SELECT SalesOrderNumber, SalesOrderLineNumber, SalesReasonKey from {{input_dataframe}};
+           """
+
 @dag(schedule='@daily', default_args=default_args,catchup=False,
 tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk'],description=description)
 def example_gold():
@@ -176,7 +182,7 @@ def example_gold():
             metadata=Metadata(schema="public",database="salesdw")
         
         ),
-        source_table=schema_enforce_salesreason(extract_sales_reason),
+        source_table=to_table(schema_enforce_salesreason(extract_sales_reason)),
         target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         if_conflicts="update",
