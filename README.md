@@ -68,10 +68,8 @@
   - kubernetes Connection: {"name":"kubeconnect", "in-cluster":true} 
   - MiniO Connection: {"aws_access_key_id": "YOURACCESSKEY", "aws_secret_access_key": "YOURSECRETKEY", "endpoint_url": "http://172.19.0.3:8686"}
   - YugabyteDB Connection: {"name": "yugabytedb_ysql", "host": "yb-tservers.database.svc.cluster.local", "schema": "salesdw", "login": "plumber", "password": "PlumberSDE", "port": "5433"}
+- load_file do astro sdk necessitou adicionar core.enable_xcom_pickling: 'True' no values.yaml
 
-{
-  ""
-}
 ## Lenses
 - opcional, apenas para facilitar a visualização dos tópicos kafka
 - porta 3030
@@ -168,6 +166,7 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 - [Script processamento stream kafka to silver](code/spark/example/silver/dimproductsubcategory-silver.py)
 - [Script processamento batch silver to YugabyteDB](code/spark/example/gold/dimproductsubcategory-gold.py)
 - [Dag from silver to gold](dags/gold/example_gold.py)
+
 ![dimproductsubcategory.png](imgs/dimproductsubcategory.png)
 
 ### dimproductcategory
@@ -187,11 +186,8 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 
 
 
-
-### From Kafka to S3 via Spark Structure Stream
-dimproductsubcategory
-
-### From Kafka to YugabyteDB via Spark
-
-### From Kafka to YugabyteDB via Spark Structure Stream
-
+### factinternetsalesreason
+- [Arquivo de origem](code/minio/example/dw-files/internetsalesreason/factinternetsalesreason.csv)
+- Realiza a ingestão e carga via load_file do astro sdk
+- [Dag from landing to Yugabytedb](dags/gold/example_gold.py)
+![factinternetsalesreason.png](imgs/factinternetsalesreason.png)
