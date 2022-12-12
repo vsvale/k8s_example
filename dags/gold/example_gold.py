@@ -164,26 +164,26 @@ def example_gold():
         columns_names_capitalization="original",
         ))
 
-#        source_salesreason = rename_salesreason(extract_sales_reason)
-#
-#        loads_to_yugabytedb = aql.merge(
-#            target_table=Table(
-#            name="factinternetsalesreason",
-#            conn_id='yugabytedb_ysql',
-#            columns=[
-#                sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
-#                sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
-#                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
-#            ],
-#            metadata=Metadata(schema="public",database="salesdw")
-#        
-#        ),
-#        source_table=source_salesreason,
-#        target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
-#        columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
-#        if_conflicts="update",
-#        )
-#
+        source_salesreason = rename_salesreason(extract_sales_reason)
+
+        loads_to_yugabytedb = aql.merge(
+            target_table=Table(
+            name="factinternetsalesreason",
+            conn_id='yugabytedb_ysql',
+            columns=[
+                sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
+                sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
+                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
+            ],
+            metadata=Metadata(schema="public",database="salesdw")
+        
+        ),
+        source_table=source_salesreason,
+        target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
+        columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
+        if_conflicts="update",
+        )
+
 
 #        loads_s3_to_yugabytedb = aql.load_file(
 #        task_id="t_loads_s3_to_yugabytedb",
