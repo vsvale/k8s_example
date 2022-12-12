@@ -35,8 +35,8 @@ description = "DAG to create dim and facts and save in gold and YugabyteDB"
 
 @aql.dataframe(columns_names_capitalization="original")
 def rename_salesreason(df: DataFrame):
-    rename = df.columns=['SalesOrderNumber','SalesOrderLineNumber','SalesReasonKey']
-    schema_enforce = rename.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
+    df.set_axis(['SalesOrderNumber', 'SalesOrderLineNumber', 'SalesReasonKey'], axis='columns', inplace=True)
+    schema_enforce = df.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
     return schema_enforce
 
 @dag(schedule='@daily', default_args=default_args,catchup=False,
