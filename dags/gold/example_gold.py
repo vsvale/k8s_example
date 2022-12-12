@@ -33,11 +33,6 @@ default_args = {
 
 description = "DAG to create dim and facts and save in gold and YugabyteDB"
 
-@aql.dataframe(columns_names_capitalization="original")
-def schema_enforce_salesreason(df: DataFrame):
-    schema_enforce = df.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
-    return schema_enforce
-
 @dag(schedule='@daily', default_args=default_args,catchup=False,
 tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk'],description=description)
 def example_gold():
@@ -157,14 +152,11 @@ def example_gold():
         poke_interval=120,
         aws_conn_id='minio')
 
-        extract_sales_reason = (aql.load_file(
-        task_id="t_extract_sales_reason",
-        input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv",filetype=FileType.CSV, conn_id='minio'),
-        columns_names_capitalization="original",
-        ))
-
-        yu_output_table = Table(
-            name="temp_factinternetsalesreason",
+        loads_s3_to_temp = aql.load_file(
+        task_id="t_loads_s3_to_temp",
+        input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
+        output_table=Table(
+            name="factinternetsalesreason_temp",
             conn_id='yugabytedb_ysql',
             columns=[
                 sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
@@ -172,8 +164,13 @@ def example_gold():
                 sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
             ],
             metadata=Metadata(schema="public",database="salesdw"),
-        
+            temp=True,        
+        ),
+        if_exists="replace",
+        use_native_support=True,
+        columns_names_capitalization="original",
         )
+
 
         loads_to_yugabytedb = aql.merge(
             task_id="t_merge_sales_reason",
@@ -187,7 +184,7 @@ def example_gold():
             ],
             metadata=Metadata(schema="public",database="salesdw"),
         ),
-        source_table=schema_enforce_salesreason(extract_sales_reason,output_table=yu_output_table),
+        source_table=loads_s3_to_temp,
         target_conflict_columns=[["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"]],
         columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         if_conflicts="update",
@@ -215,7 +212,7 @@ def example_gold():
 #
         
         
-        sensor_landing_example_salesreason >> extract_sales_reason
+        sensor_landing_example_salesreason >> loads_s3_to_temp
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
