@@ -176,7 +176,7 @@ def example_gold():
             metadata=Metadata(schema="public",database="salesdw")
         
         ),
-        source_table=extract_sales_reason,
+        source_table=schema_enforce_salesreason(extract_sales_reason),
         target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         if_conflicts="update",
