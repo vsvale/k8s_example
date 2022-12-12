@@ -14,6 +14,7 @@ from astro.files import File
 from astro.constants import FileType
 from astro.sql.table import Table, Metadata
 import sqlalchemy
+from pandas import DataFrame
 
 LANDING_ZONE = getenv("LANDING_ZONE", "landing")
 LAKEHOUSE = getenv("LAKEHOUSE", "lakehouse")
@@ -31,6 +32,12 @@ default_args = {
     'depends_on_past':False}
 
 description = "DAG to create dim and facts and save in gold and YugabyteDB"
+
+@aql.dataframe
+def rename_salesreason(df: DataFrame):
+    rename = df.columns=['SalesOrderNumber','SalesOrderLineNumber','SalesReasonKey']
+    schema_enforce = rename.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
+    return schema_enforce
 
 @dag(schedule='@daily', default_args=default_args,catchup=False,
 tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk','postgresoperator'],description=description)
@@ -155,8 +162,9 @@ def example_gold():
         task_id="t_extract_sales_reason",
         input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv",filetype=FileType.CSV, conn_id='minio'),
         columns_names_capitalization="original",
-        )).columns=['SalesOrderNumber','SalesOrderLineNumber','SalesReasonKey']
+        ))
 
+        source_salesreason = rename_salesreason(extract_sales_reason)
 
         loads_to_yugabytedb = aql.merge(
             target_table=Table(
@@ -170,7 +178,7 @@ def example_gold():
             metadata=Metadata(schema="public",database="salesdw")
         
         ),
-        source_table=extract_sales_reason,
+        source_table=source_salesreason,
         target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         if_conflicts="update",
@@ -198,7 +206,7 @@ def example_gold():
 #
         
         
-        sensor_landing_example_salesreason >> extract_sales_reason>> loads_to_yugabytedb
+        sensor_landing_example_salesreason >> extract_sales_reason >> loads_to_yugabytedb
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
