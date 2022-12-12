@@ -38,12 +38,6 @@ def schema_enforce_salesreason(df: DataFrame):
     schema_enforce = df.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
     return schema_enforce
 
-@aql.transform
-def to_table(input_dataframe: DataFrame):
-    return """
-            SELECT SalesOrderNumber, SalesOrderLineNumber, SalesReasonKey from {{input_dataframe}};
-           """
-
 @dag(schedule='@daily', default_args=default_args,catchup=False,
 tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk'],description=description)
 def example_gold():
@@ -169,6 +163,19 @@ def example_gold():
         columns_names_capitalization="original",
         ))
 
+        yu_output_table = Table(
+            name="factinternetsalesreason",
+            conn_id='yugabytedb_ysql',
+            columns=[
+                sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
+                sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
+                sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
+            ],
+            metadata=Metadata(schema="public",database="salesdw"),
+            temp=True,
+        
+        )
+
         loads_to_yugabytedb = aql.merge(
             task_id="t_merge_sales_reason",
             target_table=Table(
@@ -179,10 +186,9 @@ def example_gold():
                 sqlalchemy.Column("SalesOrderLineNumber", sqlalchemy.Integer, nullable=False, key="SalesOrderLineNumber"),
                 sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
             ],
-            metadata=Metadata(schema="public",database="salesdw")
-        
+            metadata=Metadata(schema="public",database="salesdw"),
         ),
-        source_table=to_table(schema_enforce_salesreason(extract_sales_reason)),
+        source_table=schema_enforce_salesreason(extract_sales_reason,output_table=yu_output_table),
         target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         if_conflicts="update",
