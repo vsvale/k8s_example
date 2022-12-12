@@ -33,14 +33,13 @@ default_args = {
 
 description = "DAG to create dim and facts and save in gold and YugabyteDB"
 
-#@aql.dataframe(columns_names_capitalization="original")
-#def rename_salesreason(df: DataFrame):
-#    df.set_axis(['SalesOrderNumber', 'SalesOrderLineNumber', 'SalesReasonKey'], axis='columns', inplace=True)
-#    schema_enforce = df.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
-#    return schema_enforce
+@aql.dataframe(columns_names_capitalization="original")
+def schema_enforce_salesreason(df: DataFrame):
+    schema_enforce = df.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
+    return schema_enforce
 
 @dag(schedule='@daily', default_args=default_args,catchup=False,
-tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk','postgresoperator'],description=description)
+tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk'],description=description)
 def example_gold():
    
     @task_group()
@@ -163,9 +162,6 @@ def example_gold():
         input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv",filetype=FileType.CSV, conn_id='minio'),
         columns_names_capitalization="original",
         ))
-
-        extract_sales_reason.set_axis(['SalesOrderNumber', 'SalesOrderLineNumber', 'SalesReasonKey'], axis='columns', inplace=True)
-        extract_sales_reason = extract_sales_reason.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
 
         loads_to_yugabytedb = aql.merge(
             task_id="t_merge_sales_reason",
