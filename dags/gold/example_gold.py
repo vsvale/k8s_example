@@ -164,7 +164,7 @@ def example_gold():
         ))
 
         yu_output_table = Table(
-            name="factinternetsalesreason",
+            name="temp_factinternetsalesreason",
             conn_id='yugabytedb_ysql',
             columns=[
                 sqlalchemy.Column("SalesOrderNumber", sqlalchemy.String(20), nullable=False, key="SalesOrderNumber"),
@@ -172,7 +172,6 @@ def example_gold():
                 sqlalchemy.Column("SalesReasonKey", sqlalchemy.Integer, nullable=False, key="SalesReasonKey")
             ],
             metadata=Metadata(schema="public",database="salesdw"),
-            temp=True,
         
         )
 
