@@ -33,11 +33,11 @@ default_args = {
 
 description = "DAG to create dim and facts and save in gold and YugabyteDB"
 
-@aql.dataframe(columns_names_capitalization="original")
-def rename_salesreason(df: DataFrame):
-    df.set_axis(['SalesOrderNumber', 'SalesOrderLineNumber', 'SalesReasonKey'], axis='columns', inplace=True)
-    schema_enforce = df.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
-    return schema_enforce
+#@aql.dataframe(columns_names_capitalization="original")
+#def rename_salesreason(df: DataFrame):
+#    df.set_axis(['SalesOrderNumber', 'SalesOrderLineNumber', 'SalesReasonKey'], axis='columns', inplace=True)
+#    schema_enforce = df.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
+#    return schema_enforce
 
 @dag(schedule='@daily', default_args=default_args,catchup=False,
 tags=['example','spark','gold','s3','sensor','k8s','YugabyteDB','astrosdk','postgresoperator'],description=description)
@@ -164,6 +164,9 @@ def example_gold():
         columns_names_capitalization="original",
         ))
 
+        extract_sales_reason.set_axis(['SalesOrderNumber', 'SalesOrderLineNumber', 'SalesReasonKey'], axis='columns', inplace=True)
+        extract_sales_reason = extract_sales_reason.astype({"SalesOrderNumber":"category","SalesOrderLineNumber":"int64","SalesReasonKey":"int64"})
+
         loads_to_yugabytedb = aql.merge(
             task_id="t_merge_sales_reason",
             target_table=Table(
@@ -177,7 +180,7 @@ def example_gold():
             metadata=Metadata(schema="public",database="salesdw")
         
         ),
-        source_table=rename_salesreason(extract_sales_reason),
+        source_table=extract_sales_reason,
         target_conflict_columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         columns=["SalesOrderNumber","SalesOrderLineNumber","SalesReasonKey"],
         if_conflicts="update",
