@@ -167,6 +167,7 @@ def example_gold():
         source_salesreason = rename_salesreason(extract_sales_reason)
 
         loads_to_yugabytedb = aql.merge(
+            task_id="t_merge_sales_reason",
             target_table=Table(
             name="factinternetsalesreason",
             conn_id='yugabytedb_ysql',
@@ -206,7 +207,7 @@ def example_gold():
 #
         
         
-        sensor_landing_example_salesreason >> extract_sales_reason >> loads_to_yugabytedb
+        sensor_landing_example_salesreason >> extract_sales_reason
     [dimsalesterritory_gold(), factinternetsalesreason_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
