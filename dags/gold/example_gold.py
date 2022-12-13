@@ -235,7 +235,7 @@ def example_gold():
             if_conflicts="update",
         )
 
-        truncate_results = aql.drop_table(table=Table(name=loads_s3_to_temp, conn_id="yugabytedb_ysql"))
+        truncate_results = aql.drop_table(table=Table(name="promotion_csv", conn_id="yugabytedb_ysql"))
 
         sensor_landing_example_promotion >> loads_s3_to_temp >> load_to_yugabytedb >> truncate_results
     [dimsalesterritory_gold(), factinternetsalesreason_gold(),dimpromotion_gold()]
