@@ -154,7 +154,10 @@ def example_gold():
 
         loads_s3_to_yugabytedb = aql.load_file(
         task_id="t_loads_s3_to_yugabytedb",
-        input_file=File(path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv", filetype=FileType.CSV, conn_id='minio'),
+        input_file=File(
+            path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv",
+            filetype=FileType.CSV,
+            conn_id='minio'),
         output_table=Table(
             name="factinternetsalesreason",
             conn_id='yugabytedb_ysql',
@@ -170,10 +173,72 @@ def example_gold():
         use_native_support=True,
         columns_names_capitalization="original",
         )
-
-        
+       
         
         sensor_landing_example_salesreason >> loads_s3_to_yugabytedb
-    [dimsalesterritory_gold(), factinternetsalesreason_gold()]
+
+    @task_group()
+    def dimpromotion_gold():
+        sensor_landing_example_promotion = S3KeySensor(
+        task_id='t_sensor_landing_example_salesreason',
+        bucket_name=LANDING_ZONE,
+        bucket_key='example/dw-files/promotion/*',
+        wildcard_match=True,
+        timeout=18 * 60 * 60,
+        poke_interval=120,
+        aws_conn_id='minio')
+
+        loads_s3_to_temp = aql.load_file(
+        task_id="t_loads_s3_to_temp",
+        input_file=File(
+            path="s3://landing/example/dw-files/promotion/*",
+            filetype=FileType.CSV,
+            conn_id='minio'),
+        output_table=Table(
+            name="temp_promotion",
+            conn_id='yugabytedb_ysql',
+            columns=[
+                sqlalchemy.Column("PromotionKey", sqlalchemy.Integer, nullable=False, key="PromotionKey"),
+                sqlalchemy.Column("PromotionAlternateKey", sqlalchemy.Integer, nullable=False, key="PromotionAlternateKey"),
+                sqlalchemy.Column("EnglishPromotionName", sqlalchemy.String(255), nullable=False, key="EnglishPromotionName"),
+                sqlalchemy.Column("SpanishPromotionName", sqlalchemy.String(255), nullable=False, key="SpanishPromotionName"),
+                sqlalchemy.Column("FrenchPromotionName", sqlalchemy.String(255), nullable=False, key="FrenchPromotionName"),
+                sqlalchemy.Column("DiscountPct", sqlalchemy.Float, nullable=False, key="DiscountPct"),
+                sqlalchemy.Column("EnglishPromotionType", sqlalchemy.String(50), nullable=False, key="EnglishPromotionType"),
+                sqlalchemy.Column("SpanishPromotionType", sqlalchemy.String(50), nullable=False, key="SpanishPromotionType"),
+                sqlalchemy.Column("FrenchPromotionType", sqlalchemy.String(50), nullable=False, key="FrenchPromotionType"),
+                sqlalchemy.Column("EnglishPromotionCategory", sqlalchemy.String(50), nullable=False, key="EnglishPromotionCategory"),
+                sqlalchemy.Column("SpanishPromotionCategory", sqlalchemy.String(50), nullable=False, key="SpanishPromotionCategory"),
+                sqlalchemy.Column("FrenchPromotionCategory", sqlalchemy.String(50), nullable=False, key="FrenchPromotionCategory"),
+                sqlalchemy.Column("StartDate", sqlalchemy.TIMESTAMP, nullable=False, key="StartDate"),
+                sqlalchemy.Column("EndDate", sqlalchemy.TIMESTAMP, nullable=False, key="EndDate"),
+                sqlalchemy.Column("MinQty", sqlalchemy.Integer, nullable=False, key="MinQty"),
+                sqlalchemy.Column("MaxQty", sqlalchemy.Integer, nullable=False, key="MaxQty")
+            ],
+            metadata=Metadata(schema="public",database="salesdw")
+        
+        ),
+        if_exists="replace",
+        use_native_support=True,
+        columns_names_capitalization="original",
+        temp=True
+        )
+
+        load_to_yugabytedb = aql.merge(
+            target_table=Table(
+                name="dimpromotion",
+                conn_id='yugabytedb_ysql',
+                metadata=Metadata(schema="public",database="salesdw")
+            ),
+            source_table=loads_s3_to_temp,
+            target_conflict_columns=["PromotionKey"],
+            columns=["PromotionAlternateKey","EnglishPromotionName","SpanishPromotionName","FrenchPromotionName","DiscountPct","EnglishPromotionType","SpanishPromotionType","FrenchPromotionType","EnglishPromotionCategory","SpanishPromotionCategory","FrenchPromotionCategory","StartDate","EndDate","MinQty","MaxQty"]
+            if_conflicts="update",
+        )
+
+        truncate_results = aql.drop_table(table=Table(name=loads_s3_to_temp, conn_id="yugabytedb_ysql"))
+
+        sensor_landing_example_promotion >> loads_s3_to_temp >> load_to_yugabytedb >> truncate_results
+    [dimsalesterritory_gold(), factinternetsalesreason_gold(),dimpromotion_gold()]
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
