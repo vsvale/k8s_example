@@ -198,29 +198,29 @@ def example_gold():
             name="promotion_csv",
             conn_id='yugabytedb_ysql',
             columns=[
-                sqlalchemy.Column("PromotionKey", sqlalchemy.Integer, nullable=False, key="PromotionKey"),
-                sqlalchemy.Column("PromotionAlternateKey", sqlalchemy.Integer, nullable=False, key="PromotionAlternateKey"),
-                sqlalchemy.Column("EnglishPromotionName", sqlalchemy.String(255), nullable=False, key="EnglishPromotionName"),
-                sqlalchemy.Column("SpanishPromotionName", sqlalchemy.String(255), nullable=False, key="SpanishPromotionName"),
-                sqlalchemy.Column("FrenchPromotionName", sqlalchemy.String(255), nullable=False, key="FrenchPromotionName"),
-                sqlalchemy.Column("DiscountPct", sqlalchemy.Float, nullable=False, key="DiscountPct"),
-                sqlalchemy.Column("EnglishPromotionType", sqlalchemy.String(50), nullable=False, key="EnglishPromotionType"),
-                sqlalchemy.Column("SpanishPromotionType", sqlalchemy.String(50), nullable=False, key="SpanishPromotionType"),
-                sqlalchemy.Column("FrenchPromotionType", sqlalchemy.String(50), nullable=False, key="FrenchPromotionType"),
-                sqlalchemy.Column("EnglishPromotionCategory", sqlalchemy.String(50), nullable=False, key="EnglishPromotionCategory"),
-                sqlalchemy.Column("SpanishPromotionCategory", sqlalchemy.String(50), nullable=False, key="SpanishPromotionCategory"),
-                sqlalchemy.Column("FrenchPromotionCategory", sqlalchemy.String(50), nullable=False, key="FrenchPromotionCategory"),
-                sqlalchemy.Column("StartDate", sqlalchemy.TIMESTAMP, nullable=False, key="StartDate"),
-                sqlalchemy.Column("EndDate", sqlalchemy.TIMESTAMP, nullable=False, key="EndDate"),
-                sqlalchemy.Column("MinQty", sqlalchemy.Integer, nullable=False, key="MinQty"),
-                sqlalchemy.Column("MaxQty", sqlalchemy.Integer, nullable=False, key="MaxQty")
+                sqlalchemy.Column("promotionkey", sqlalchemy.Integer, nullable=False, key="promotionkey"),
+                sqlalchemy.Column("promotionalternatekey", sqlalchemy.Integer, nullable=False, key="promotionalternatekey"),
+                sqlalchemy.Column("englishpromotionname", sqlalchemy.String(255), nullable=False, key="englishpromotionname"),
+                sqlalchemy.Column("spanishpromotionname", sqlalchemy.String(255), nullable=False, key="spanishpromotionname"),
+                sqlalchemy.Column("frenchpromotionname", sqlalchemy.String(255), nullable=False, key="frenchpromotionname"),
+                sqlalchemy.Column("discountpct", sqlalchemy.Float, nullable=False, key="discountpct"),
+                sqlalchemy.Column("englishpromotiontype", sqlalchemy.String(50), nullable=False, key="englishpromotiontype"),
+                sqlalchemy.Column("spanishpromotiontype", sqlalchemy.String(50), nullable=False, key="spanishpromotiontype"),
+                sqlalchemy.Column("frenchpromotiontype", sqlalchemy.String(50), nullable=False, key="frenchpromotiontype"),
+                sqlalchemy.Column("englishpromotioncategory", sqlalchemy.String(50), nullable=False, key="englishpromotioncategory"),
+                sqlalchemy.Column("spanishpromotioncategory", sqlalchemy.String(50), nullable=False, key="spanishpromotioncategory"),
+                sqlalchemy.Column("frenchpromotioncategory", sqlalchemy.String(50), nullable=False, key="frenchpromotioncategory"),
+                sqlalchemy.Column("startdate", sqlalchemy.TIMESTAMP, nullable=False, key="startdate"),
+                sqlalchemy.Column("enddate", sqlalchemy.TIMESTAMP, nullable=False, key="enddate"),
+                sqlalchemy.Column("minqty", sqlalchemy.Integer, nullable=False, key="minqty"),
+                sqlalchemy.Column("maxqty", sqlalchemy.Integer, nullable=False, key="maxqty")
             ],
             metadata=Metadata(schema="public",database="salesdw")
         
         ),
         if_exists="replace",
         use_native_support=True,
-        columns_names_capitalization="original"
+        columns_names_capitalization="lower"
         )
 
         load_to_yugabytedb = aql.merge(
@@ -230,24 +230,24 @@ def example_gold():
                 metadata=Metadata(schema="public",database="salesdw")
             ),
             source_table=loads_s3_to_temp,
-            target_conflict_columns=["PromotionKey"],
+            target_conflict_columns=["promotionkey"],
             columns={
-                "PromotionKey":"promotionkey",
-                "PromotionAlternateKey":"promotionalternatekey",
-                "EnglishPromotionName":"englishpromotionname",
-                "SpanishPromotionName":"spanishpromotionname",
-                "FrenchPromotionName":"frenchpromotionname",
-                "DiscountPct":"discountpct",
-                "EnglishPromotionType":"englishpromotiontype",
-                "SpanishPromotionType":"spanishpromotiontype",
+                "promotionkey":"promotionkey",
+                "promotionalternatekey":"promotionalternatekey",
+                "englishpromotionname":"englishpromotionname",
+                "spanishpromotionname":"spanishpromotionname",
+                "frenchpromotionname":"frenchpromotionname",
+                "discountpct":"discountpct",
+                "englishpromotiontype":"englishpromotiontype",
+                "spanishpromotiontype":"spanishpromotiontype",
                 "FrenchPromotionType":"frenchpromotiontype",
-                "EnglishPromotionCategory":"englishpromotioncategory",
-                "SpanishPromotionCategory":"spanishpromotioncategory",
-                "FrenchPromotionCategory":"frenchpromotioncategory",
-                "StartDate":"startdate",
-                "EndDate":"enddate",
-                "MinQty":"minqty",
-                "MaxQty":"maxqty"
+                "englishpromotioncategory":"englishpromotioncategory",
+                "spanishpromotioncategory":"spanishpromotioncategory",
+                "frenchpromotioncategory":"frenchpromotioncategory",
+                "startdate":"startdate",
+                "enddate":"enddate",
+                "minqty":"minqty",
+                "maxqty":"maxqty"
             },
             if_conflicts="update",
         )
