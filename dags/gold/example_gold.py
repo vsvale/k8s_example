@@ -252,7 +252,14 @@ def example_gold():
             if_conflicts="update",
         )
 
-        truncate_results = aql.drop_table(table=Table(name="promotion_csv", conn_id="yugabytedb_ysql"), metadata=Metadata(schema="public",database="salesdw"))
+        truncate_results = aql.drop_table(
+            task_id="t_drop_promotion_csv",
+            table=Table(
+            name="promotion_csv",
+            conn_id='yugabytedb_ysql',
+            metadata=Metadata(schema="public",database="salesdw")
+        )
+            )
 
         sensor_landing_example_promotion >> loads_s3_to_temp >> load_to_yugabytedb >> truncate_results
     [dimsalesterritory_gold()]
