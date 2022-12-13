@@ -199,7 +199,7 @@ ALTER TABLE DimGeography ADD PRIMARY KEY (GeographyKey);
 ALTER TABLE DimProduct ADD PRIMARY KEY (ProductKey);
 ALTER TABLE DimProductCategory ADD PRIMARY KEY (ProductCategoryKey);
 ALTER TABLE DimProductSubcategory ADD PRIMARY KEY (ProductSubcategoryKey);
-ALTER TABLE DimPromotion ADD PRIMARY KEY (PromotionKey);
+ALTER TABLE DimPromotion ADD PRIMARY KEY (promotionkey);
 ALTER TABLE DimSalesTerritory ADD PRIMARY KEY (SalesTerritoryKey);
 ALTER TABLE FactInternetSales ADD PRIMARY KEY (SalesOrderNumber,SalesOrderLineNumber);
 ALTER TABLE FactInternetSalesReason ADD PRIMARY KEY (SalesOrderNumber,SalesOrderLineNumber,SalesReasonKey);
