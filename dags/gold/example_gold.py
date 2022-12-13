@@ -191,7 +191,7 @@ def example_gold():
         loads_s3_to_temp = aql.load_file(
         task_id="t_loads_promotion_s3_to_temp",
         input_file=File(
-            path="s3://landing/example/dw-files/promotion/*",
+            path="s3://landing/example/dw-files/promotion/",
             filetype=FileType.CSV,
             conn_id='minio'),
         output_table=Table(
