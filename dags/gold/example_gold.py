@@ -256,7 +256,8 @@ def example_gold():
             task_id="t_drop_promotion_csv",
             table=Table(
             name="promotion_csv",
-            conn_id='yugabytedb_ysql'
+            conn_id='yugabytedb_ysql',
+            schema="public"
         )
             )
 
