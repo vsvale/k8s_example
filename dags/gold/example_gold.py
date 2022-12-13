@@ -195,7 +195,7 @@ def example_gold():
             filetype=FileType.CSV,
             conn_id='minio'),
         output_table=Table(
-            name="temp_promotion",
+            name="promotion_csv",
             conn_id='yugabytedb_ysql',
             columns=[
                 sqlalchemy.Column("PromotionKey", sqlalchemy.Integer, nullable=False, key="PromotionKey"),
