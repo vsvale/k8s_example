@@ -153,7 +153,7 @@ def example_gold():
         aws_conn_id='minio')
 
         loads_s3_to_yugabytedb = aql.load_file(
-        task_id="t_loads_s3_to_yugabytedb",
+        task_id="t_loads_salesreason_s3_to_yugabytedb",
         input_file=File(
             path="s3://landing/example/dw-files/internetsalesreason/factinternetsalesreason.csv",
             filetype=FileType.CSV,
@@ -180,7 +180,7 @@ def example_gold():
     @task_group()
     def dimpromotion_gold():
         sensor_landing_example_promotion = S3KeySensor(
-        task_id='t_sensor_landing_example_salesreason',
+        task_id='t_sensor_landing_example_promotion',
         bucket_name=LANDING_ZONE,
         bucket_key='example/dw-files/promotion/*',
         wildcard_match=True,
@@ -189,7 +189,7 @@ def example_gold():
         aws_conn_id='minio')
 
         loads_s3_to_temp = aql.load_file(
-        task_id="t_loads_s3_to_temp",
+        task_id="t_loads_promotion_s3_to_temp",
         input_file=File(
             path="s3://landing/example/dw-files/promotion/*",
             filetype=FileType.CSV,
