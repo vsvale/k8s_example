@@ -255,9 +255,8 @@ def example_gold():
         truncate_results = aql.drop_table(
             task_id="t_drop_promotion_csv",
             table=Table(
-            name="promotion_csv",
+            name="public.promotion_csv",
             conn_id='yugabytedb_ysql',
-            schema="public"
         )
             )
 
