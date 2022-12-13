@@ -198,7 +198,7 @@ def example_gold():
             name="promotion_csv",
             conn_id='yugabytedb_ysql',
             columns=[
-                sqlalchemy.Column("promotionkey", sqlalchemy.Integer, nullable=False, key="promotionkey"),
+                sqlalchemy.Column("promotionkey", sqlalchemy.Integer, nullable=False, primary_key=True),
                 sqlalchemy.Column("promotionalternatekey", sqlalchemy.Integer, nullable=False, key="promotionalternatekey"),
                 sqlalchemy.Column("englishpromotionname", sqlalchemy.String(255), nullable=False, key="englishpromotionname"),
                 sqlalchemy.Column("spanishpromotionname", sqlalchemy.String(255), nullable=False, key="spanishpromotionname"),
