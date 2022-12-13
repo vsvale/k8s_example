@@ -232,7 +232,7 @@ def example_gold():
             ),
             source_table=loads_s3_to_temp,
             target_conflict_columns=["PromotionKey"],
-            columns=["PromotionAlternateKey","EnglishPromotionName","SpanishPromotionName","FrenchPromotionName","DiscountPct","EnglishPromotionType","SpanishPromotionType","FrenchPromotionType","EnglishPromotionCategory","SpanishPromotionCategory","FrenchPromotionCategory","StartDate","EndDate","MinQty","MaxQty"]
+            columns=["PromotionAlternateKey","EnglishPromotionName","SpanishPromotionName","FrenchPromotionName","DiscountPct","EnglishPromotionType","SpanishPromotionType","FrenchPromotionType","EnglishPromotionCategory","SpanishPromotionCategory","FrenchPromotionCategory","StartDate","EndDate","MinQty","MaxQty"],
             if_conflicts="update",
         )
 
