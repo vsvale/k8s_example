@@ -231,13 +231,31 @@ def example_gold():
             ),
             source_table=loads_s3_to_temp,
             target_conflict_columns=["PromotionKey"],
-            columns=["promotionKey","promotionalternatekey","englishpromotionname","spanishpromotionname","FrenchPromotionName","DiscountPct","EnglishPromotionType","SpanishPromotionType","FrenchPromotionType","EnglishPromotionCategory","SpanishPromotionCategory","FrenchPromotionCategory","StartDate","EndDate","MinQty","MaxQty"],
+            columns={
+                "PromotionKey":"PromotionKey",
+                "PromotionAlternateKey":"PromotionAlternateKey",
+                "EnglishPromotionName":"EnglishPromotionName",
+                "SpanishPromotionName":"SpanishPromotionName",
+                "FrenchPromotionName":"FrenchPromotionName",
+                "DiscountPct":"DiscountPct",
+                "EnglishPromotionType":"EnglishPromotionType",
+                "SpanishPromotionType":"SpanishPromotionType",
+                "FrenchPromotionType":"FrenchPromotionType",
+                "EnglishPromotionCategory":"EnglishPromotionCategory",
+                "SpanishPromotionCategory":"SpanishPromotionCategory",
+                "FrenchPromotionCategory":"FrenchPromotionCategory",
+                "StartDate":"StartDate",
+                "EndDate":"EndDate",
+                "MinQty":"MinQty",
+                "MaxQty":"MaxQty"
+            },
             if_conflicts="update",
         )
 
         truncate_results = aql.drop_table(table=Table(name="promotion_csv", conn_id="yugabytedb_ysql"))
 
         sensor_landing_example_promotion >> loads_s3_to_temp >> load_to_yugabytedb >> truncate_results
-    [dimsalesterritory_gold(), factinternetsalesreason_gold(),dimpromotion_gold()]
+    [dimsalesterritory_gold()]
+    dimpromotion_gold() >> factinternetsalesreason_gold()
     dimproductcategory_gold() >> dimproductsubcategory_gold()
 dag = example_gold()
