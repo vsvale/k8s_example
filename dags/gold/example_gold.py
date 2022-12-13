@@ -232,7 +232,7 @@ def example_gold():
             source_table=loads_s3_to_temp,
             target_conflict_columns=["PromotionKey"],
             columns={
-                "PromotionKey":"promotionKey",
+                "PromotionKey":"promotionkey",
                 "PromotionAlternateKey":"PromotionAlternateKey",
                 "EnglishPromotionName":"EnglishPromotionName",
                 "SpanishPromotionName":"SpanishPromotionName",
