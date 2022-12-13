@@ -256,8 +256,7 @@ def example_gold():
             task_id="t_drop_promotion_csv",
             table=Table(
             name="promotion_csv",
-            conn_id='yugabytedb_ysql',
-            metadata=Metadata(schema="public",database="salesdw")
+            conn_id='yugabytedb_ysql'
         )
             )
 
