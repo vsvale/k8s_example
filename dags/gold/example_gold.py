@@ -231,7 +231,7 @@ def example_gold():
             ),
             source_table=loads_s3_to_temp,
             target_conflict_columns=["PromotionKey"],
-            columns=["PromotionKey","PromotionAlternateKey","EnglishPromotionName","SpanishPromotionName","FrenchPromotionName","DiscountPct","EnglishPromotionType","SpanishPromotionType","FrenchPromotionType","EnglishPromotionCategory","SpanishPromotionCategory","FrenchPromotionCategory","StartDate","EndDate","MinQty","MaxQty"],
+            columns=["promotionKey","promotionalternatekey","englishpromotionname","spanishpromotionname","FrenchPromotionName","DiscountPct","EnglishPromotionType","SpanishPromotionType","FrenchPromotionType","EnglishPromotionCategory","SpanishPromotionCategory","FrenchPromotionCategory","StartDate","EndDate","MinQty","MaxQty"],
             if_conflicts="update",
         )
 
