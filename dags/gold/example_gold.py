@@ -232,7 +232,6 @@ def example_gold():
             source_table=loads_s3_to_temp,
             target_conflict_columns=["promotionkey"],
             columns={
-                "promotionkey":"promotionkey",
                 "promotionalternatekey":"promotionalternatekey",
                 "englishpromotionname":"englishpromotionname",
                 "spanishpromotionname":"spanishpromotionname",
