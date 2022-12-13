@@ -220,7 +220,7 @@ def example_gold():
         ),
         if_exists="replace",
         use_native_support=True,
-        columns_names_capitalization="lower"
+        columns_names_capitalization="original"
         )
 
         load_to_yugabytedb = aql.merge(
@@ -239,7 +239,7 @@ def example_gold():
                 "discountpct":"discountpct",
                 "englishpromotiontype":"englishpromotiontype",
                 "spanishpromotiontype":"spanishpromotiontype",
-                "FrenchPromotionType":"frenchpromotiontype",
+                "frenchpromotiontype":"frenchpromotiontype",
                 "englishpromotioncategory":"englishpromotioncategory",
                 "spanishpromotioncategory":"spanishpromotioncategory",
                 "frenchpromotioncategory":"frenchpromotioncategory",
