@@ -191,3 +191,10 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 - Realiza a ingestão e carga via load_file do astro sdk
 - [Dag from landing to Yugabytedb](dags/gold/example_gold.py)
 ![factinternetsalesreason.png](imgs/factinternetsalesreason.png)
+
+### dimpromotion
+- [Arquivo de origem](code/minio/example/dw-files/promotion/dimpromotion.csv) foi necessário adicionar cabeçalho para o astro merge
+- 1. Consumo do arquivo csv na landing e salva conteudo em tabela temporaria no YugabyteDb
+- 2. Realiza a leitura da tabela temporaria e realiza o UPSERT com a dimpromotion no YugabyteDB
+- [Dag from landing to Yugabytedb](dags/gold/example_gold.py)
+![dimpromotion.png)](imgs/dimpromotion.png)
