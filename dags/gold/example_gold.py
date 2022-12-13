@@ -252,15 +252,12 @@ def example_gold():
             if_conflicts="update",
         )
 
-        truncate_results = aql.drop_table(
-            task_id="t_drop_promotion_csv",
-            table=Table(
-            name="public.promotion_csv",
-            conn_id='yugabytedb_ysql',
-        )
-            )
+        drop_promotion_csv_tb = PostgresOperator(
+        task_id='drop_promotion_csv',
+        postgres_conn_id='yugabytedb_ysql',
+        sql=""" DROP TABLE IF EXISTS public.promotion_csv; """)
 
-        sensor_landing_example_promotion >> loads_s3_to_temp >> load_to_yugabytedb >> truncate_results
+        sensor_landing_example_promotion >> loads_s3_to_temp >> load_to_yugabytedb >> drop_promotion_csv_tb
     [dimsalesterritory_gold()]
     dimpromotion_gold() >> factinternetsalesreason_gold()
     dimproductcategory_gold() >> dimproductsubcategory_gold()
