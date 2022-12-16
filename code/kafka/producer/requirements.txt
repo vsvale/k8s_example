@@ -1,0 +1,4 @@
+confluent_kafka
+faker
+deep-translator
+python-dotenv
