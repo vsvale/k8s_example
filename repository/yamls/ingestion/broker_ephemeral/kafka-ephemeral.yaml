@@ -101,13 +101,14 @@ spec:
   entityOperator:
     topicOperator: {}
     userOperator: {}
-  cruiseControl:
-    metricsConfig:
-      type: jmxPrometheusExporter
-      valueFrom:
-        configMapKeyRef:
-          name: cruise-control-metrics
-          key: metrics-config.yml
+# need 2 kafka node
+#  cruiseControl:
+#    metricsConfig:
+#      type: jmxPrometheusExporter
+#      valueFrom:
+#        configMapKeyRef:
+#          name: cruise-control-metrics
+#          key: metrics-config.yml
   kafkaExporter:
     topicRegex: ".*"
     groupRegex: ".*"
