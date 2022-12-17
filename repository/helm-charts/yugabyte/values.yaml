@@ -24,19 +24,19 @@ resource:
       cpu: 250m
       memory: 250Mi
     limits:
-      cpu: 1000m
+      cpu: 500m
       memory: 500Mi
   tserver:
     requests:
       cpu: 250m
       memory: 250Mi
     limits:
-      cpu: 1000m
+      cpu: 500m
       memory: 500Mi
 
 replicas:
-  master: 2
-  tserver: 3
+  master: 1
+  tserver: 1
 
 partition:
   master: 0

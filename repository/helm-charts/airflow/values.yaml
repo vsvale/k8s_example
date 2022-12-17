@@ -437,7 +437,7 @@ kerberos:
 # Airflow Worker Config
 workers:
   # Number of airflow celery workers in StatefulSet
-  replicas: 3
+  replicas: 1
   # Max number of old replicasets to retain
   revisionHistoryLimit: ~
 
@@ -542,13 +542,7 @@ workers:
     #   cpu: 100m
     #   memory: 128Mi
 
-  resources:
-    limits:
-     cpu: 1
-     memory: 3Gi
-    requests:
-     cpu: 1
-     memory: 1Gi
+  resources: {}
 
   # Grace period for tasks to finish after SIGTERM is sent from kubernetes
   terminationGracePeriodSeconds: 600
@@ -630,7 +624,7 @@ scheduler:
     command: ~
   # Airflow 2.0 allows users to run multiple schedulers,
   # However this feature is only recommended for MySQL 8+ and Postgres
-  replicas: 2
+  replicas: 1
   # Max number of old replicasets to retain
   revisionHistoryLimit: ~
 
@@ -936,13 +930,7 @@ webserver:
       ports:
         - port: "{{ .Values.ports.airflowUI }}"
 
-  resources:
-     limits:
-       cpu: 1000m
-       memory: 1500Mi
-     requests:
-       cpu: 500m
-       memory: 1000Mi
+  resources: {}
 
   # Create initial user.
   defaultUser:

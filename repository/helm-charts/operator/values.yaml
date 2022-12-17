@@ -15,7 +15,7 @@ operator:
     pullPolicy: IfNotPresent
   imagePullSecrets: [ ]
   initcontainers: [ ]
-  replicaCount: 2
+  replicaCount: 1
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
@@ -38,7 +38,7 @@ operator:
     requests:
       cpu: 200m
       memory: 256Mi
-      ephemeral-storage: 500Mi
+      ephemeral-storage: 200Mi
 
 console:
   image:

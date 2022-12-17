@@ -441,9 +441,7 @@ primary:
   ##
   resources:
     limits: {}
-    requests:
-      memory: 256Mi
-      cpu: 250m
+    requests: {}
   ## Pod Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ## @param primary.podSecurityContext.enabled Enable security context
@@ -776,11 +774,7 @@ readReplicas:
   ## @param readReplicas.resources.requests.memory The requested memory for the PostgreSQL read only containers
   ## @param readReplicas.resources.requests.cpu The requested cpu for the PostgreSQL read only containers
   ##
-  resources:
-    limits: {}
-    requests:
-      memory: 256Mi
-      cpu: 250m
+  resources: {}
   ## Pod Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ## @param readReplicas.podSecurityContext.enabled Enable security context

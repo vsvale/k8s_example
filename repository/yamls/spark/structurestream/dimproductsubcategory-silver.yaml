@@ -22,16 +22,16 @@ spec:
     "fs.s3a.secret.key": "zcJWBrrGkInYEWXf4Oc37tCIdJVeA0fb"
   driver:
     # cores: 1
-    coreRequest: 500m
-    coreLimit: "2000m"
-    memory: "1000m"
+    coreRequest: 100m
+    coreLimit: "250m"
+    memory: "500m"
     labels:
       version: 3.1.1
     serviceAccount: default
   executor:
     # cores: 1
-    coreRequest: 1000m
+    coreRequest: 500m
     instances: 1
-    memory: "1000m"
+    memory: "500m"
     labels:
       version: 3.1.1
