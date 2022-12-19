@@ -11,7 +11,7 @@
   - port-foward 80 para 8081
 
 ## Lite version
-- `k3d cluster create k8sexample --volume $HOME/k8sexample:/var/lib/rancher/k3s/storage@all -s 1 --servers-memory 2Gb -a 3 --agents-memory 10gb --api-port 6443 -p 8081:80@loadbalancer -p 9089:9090@loadbalancer -p 8686:9000@loadbalancer`
+- `k3d cluster create k8sexample --volume $HOME/k8sexample:/var/lib/rancher/k3s/storage@all -s 1 --servers-memory 2Gb -a 1 --agents-memory 8gb --api-port 6443 -p 8081:80@loadbalancer`
 
 ## Create Namespace
 - `cd ./iac/k3d && terraform init && terraform plan && terraform apply -auto-approve && cd ../.. && kubectl get ns`

@@ -19,3 +19,12 @@ spec:
                   name: http
             path: /minio
             pathType: Prefix
+  - http:
+      paths:
+      - path: /minio
+        pathType: Prefix
+        backend:
+          service:
+            name: console
+            port:
+              number: 80 
