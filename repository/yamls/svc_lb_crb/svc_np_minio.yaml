@@ -4,7 +4,7 @@ metadata:
   name: minio-operator-console
   namespace: deepstorage
   labels:
-    app: minio-operator-console-np
+    app: minio-operator-console
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
