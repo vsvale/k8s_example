@@ -17,4 +17,4 @@ spec:
           service:
             name: console
             port:
-              number: 9089 
+              number: 9090 
