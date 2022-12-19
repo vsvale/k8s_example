@@ -1,21 +1,21 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: minio-operator-console
-  namespace: deepstorage
-  labels:
-    app: minio
-  annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"
-spec:
-  rules:
-    - host: localhost
-      http:
-        paths:
-          - backend:
-              service:
-                name: console
-                port:
-                  name: http
-            path: /minio
-            pathType: Prefix
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: minio-operator-console
+#  namespace: deepstorage
+#  labels:
+#    app: minio
+#  annotations:
+#    ingress.kubernetes.io/ssl-redirect: "false"
+#spec:
+#  rules:
+#    - host: localhost
+#      http:
+#        paths:
+#          - backend:
+#              service:
+#                name: console
+#                port:
+#                  name: http
+#            path: /minio
+#            pathType: Prefix
