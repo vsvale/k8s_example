@@ -65,10 +65,5 @@ console:
     host: minio
     path: /
     pathType: Prefix
-    backend:
-      service:
-        name: console
-        port:
-          number: 9090 
   volumes: [ ]
   volumeMounts: [ ]
