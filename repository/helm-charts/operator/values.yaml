@@ -60,10 +60,11 @@ console:
     enabled: true
     ingressClassName: ""
     labels: { }
-    annotations: { }
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$1
     tls: [ ]
-    host: "minio"
-    path: /
+    host: cluster.local
+    path: /minio/(.*)
     pathType: Prefix
   volumes: [ ]
   volumeMounts: [ ]
