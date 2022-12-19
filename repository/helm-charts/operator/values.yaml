@@ -62,7 +62,7 @@ console:
     labels: { }
     annotations: {}
     tls: [ ]
-    host: localhost
+    host: minio
     path: /
     pathType: Prefix
     backend:
