@@ -57,13 +57,13 @@ console:
     runAsUser: 1000
     runAsNonRoot: true
   ingress:
-    enabled: true
+    enabled: false
     ingressClassName: ""
     labels: { }
-    annotations: {}
+    annotations: { }
     tls: [ ]
-    host: localhost
-    path: /minio
+    host: cluster.local
+    path: /
     pathType: Prefix
   volumes: [ ]
   volumeMounts: [ ]
