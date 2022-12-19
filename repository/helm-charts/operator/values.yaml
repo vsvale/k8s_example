@@ -63,7 +63,7 @@ console:
     annotations: { }
     tls: [ ]
     host: "localhost"
-    path: /minio
+    path: /
     pathType: Prefix
   volumes: [ ]
   volumeMounts: [ ]
