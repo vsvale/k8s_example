@@ -57,7 +57,7 @@ console:
     runAsUser: 1000
     runAsNonRoot: true
   ingress:
-    enabled: false
+    enabled: true
     ingressClassName: ""
     labels: { }
     annotations: { }
