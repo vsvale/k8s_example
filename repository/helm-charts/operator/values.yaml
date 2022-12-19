@@ -63,7 +63,7 @@ console:
     annotations: { }
     tls: [ ]
     host: console.local
-    path: /minio-jwt
+    path: /minio
     pathType: Prefix
   volumes: [ ]
   volumeMounts: [ ]
