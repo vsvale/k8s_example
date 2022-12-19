@@ -62,7 +62,7 @@ console:
     labels: { }
     annotations: {}
     tls: [ ]
-    host: localhost:9089
+    host: localhost
     path: /
     pathType: Prefix
     backend:
