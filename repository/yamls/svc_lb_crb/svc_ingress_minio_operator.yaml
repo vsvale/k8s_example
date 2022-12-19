@@ -17,6 +17,5 @@ spec:
                 name: console
                 port:
                   name: http
-                  number: 80
             path: /minio
             pathType: Prefix
