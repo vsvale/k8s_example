@@ -4,14 +4,14 @@ metadata:
   name: minio-operator-ingress
   namespace: deepstorage
   labels:
-    app: minio-operator
+    app: minio
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
   - http:
       paths:
-      - path: /minio-operator
+      - path: /minio
         pathType: Prefix
         backend:
           service:
