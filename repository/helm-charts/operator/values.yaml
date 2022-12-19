@@ -57,13 +57,13 @@ console:
     runAsUser: 1000
     runAsNonRoot: true
   ingress:
-    enabled: false
+    enabled: true
     ingressClassName: ""
     labels: { }
     annotations: { }
     tls: [ ]
     host: console.local
-    path: /
+    path: /minio-jwt
     pathType: Prefix
   volumes: [ ]
   volumeMounts: [ ]
