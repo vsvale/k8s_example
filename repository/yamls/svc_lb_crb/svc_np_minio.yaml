@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: minio-operator-console
+  name: minio-operator-console-np
   namespace: deepstorage
   labels:
     app: minio-operator-console
