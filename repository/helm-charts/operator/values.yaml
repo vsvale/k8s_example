@@ -62,7 +62,7 @@ console:
     labels: { }
     annotations: { }
     tls: [ ]
-    host: console.local
+    host: http://127.0.0.1
     path: /minio
     pathType: Prefix
   volumes: [ ]
