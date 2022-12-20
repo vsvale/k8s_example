@@ -1,20 +1,52 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: argocd-ingress
+  name: argocd-ingress-http
   namespace: cicd
   labels:
     app: argocd
   annotations:
-    ingress.kubernetes.io/ssl-redirect: "false"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
   rules:
   - http:
       paths:
-      - path: /argocd
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: argocd-server
             port:
-              number: 80 
+              name: http
+    host: argocd.example.com
+  tls:
+  - hosts:
+    - argocd.example.com
+    secretName: argocd-secret # do not change, this is provided by Argo CD
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-grpc-ingress
+  namespace: cicd
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: https
+    host: grpc.argocd.example.com
+  tls:
+  - hosts:
+    - grpc.argocd.example.com
+    secretName: argocd-secret # do not change, this is provided by Argo CD
