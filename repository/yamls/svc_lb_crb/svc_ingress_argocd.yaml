@@ -11,11 +11,10 @@ spec:
   rules:
   - http:
       paths:
-      - path: /argocd
+      - path: /argo/argocd/
         pathType: Prefix
         backend:
           service:
             name: argocd-server
             port:
               number: 80
-    host: argocd.example.com
