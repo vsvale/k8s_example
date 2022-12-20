@@ -7,7 +7,6 @@ metadata:
     app: argocd
   annotations:
     ingress.kubernetes.io/ssl-redirect: "false"
-    ingress.kubernetes.io/app-root: "argo.com"
 spec:
   rules:
   - http:
@@ -18,4 +17,5 @@ spec:
           service:
             name: argocd-server
             port:
-              number: 80 
+              number: 80
+    host: argocd.example.com
