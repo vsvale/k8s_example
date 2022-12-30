@@ -18,10 +18,6 @@ apiVersionOverrides:
   cloudgoogle: "" # cloud.google.com/v1
   # -- String to override apiVersion of autoscaling rendered by this helm chart
   autoscaling: "" # autoscaling/v2
-  # -- String to override apiVersion of ingresses rendered by this helm chart
-  ingress: "" # networking.k8s.io/v1beta1
-  # -- String to override apiVersion of pod disruption budgets rendered by this helm chart
-  pdb: "" # policy/v1
 
 # -- Create clusterroles that extend existing clusterroles to interact with argo-cd crds
 ## Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -67,6 +63,12 @@ global:
     format: text
     # -- Set the global logging level. One of: `debug`, `info`, `warn` or `error`
     level: info
+
+  # -- Annotations for the all deployed Statefulsets
+  statefulsetAnnotations: {}
+
+  # -- Annotations for the all deployed Deployments
+  deploymentAnnotations: {}
 
   # -- Annotations for the all deployed pods
   podAnnotations: {}
@@ -127,7 +129,7 @@ configs:
     timeout.reconciliation: 180s
 
     # -- Timeout to refresh application data as well as target manifests cache
-    timeout.hard.reconciliation: 0
+    timeout.hard.reconciliation: 0s
 
     # Dex configuration
     # dex.config: |
@@ -540,6 +542,9 @@ controller:
   # - secretRef:
   #     name: secret-name
 
+  # -- Annotations for the application controller StatefulSet
+  statefulsetAnnotations: {}
+
   # -- Annotations to be added to application controller pods
   podAnnotations: {}
 
@@ -696,6 +701,7 @@ controller:
     #     prometheus: kube-prometheus
     #   namespace: monitoring
     #   additionalLabels: {}
+    #   annotations: {}
 
   ## Enable if you would like to grant rights to Argo CD to deploy to the local Kubernetes cluster.
   clusterAdminAccess:
@@ -845,6 +851,9 @@ dex:
     key: ''
     # -- Certificate data. Must contain SANs of Dex service (ie: argocd-dex-server, argocd-dex-server.argo-cd.svc)
     crt: ''
+
+  # -- Annotations to be added to the Dex server Deployment
+  deploymentAnnotations: {}
 
   # -- Annotations to be added to the Dex server pods
   podAnnotations: {}
@@ -1028,6 +1037,9 @@ redis:
   #     name: config-map-name
   # - secretRef:
   #     name: secret-name
+
+  # -- Annotations to be added to the Redis server Deployment
+  deploymentAnnotations: {}
 
   # -- Annotations to be added to the Redis server pods
   podAnnotations: {}
@@ -1343,6 +1355,9 @@ server:
   # @default -- `""` (defaults to global.logging.level)
   # logLevel: ""
 
+  # -- Annotations to be added to server Deployment
+  deploymentAnnotations: {}
+
   # -- Annotations to be added to server pods
   podAnnotations: {}
 
@@ -1573,8 +1588,7 @@ server:
     ## Argo Ingress.
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
-    hosts:
-      []
+    hosts: []
       # - argocd.example.com
 
     # -- List of ingress paths
@@ -1583,13 +1597,7 @@ server:
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- Additional ingress paths
-    extraPaths:
-      []
-      # - path: /*
-      #   backend:
-      #     serviceName: ssl-redirect
-      #     servicePort: use-annotation
-      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+    extraPaths: []
       # - path: /*
       #   pathType: Prefix
       #   backend:
@@ -1599,8 +1607,7 @@ server:
       #         name: use-annotation
 
     # -- Ingress TLS configuration
-    tls:
-      []
+    tls: []
       # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
@@ -1639,8 +1646,7 @@ server:
     ## Hostnames must be provided if Ingress is enabled.
     ## Secrets must be manually created in the namespace
     ##
-    hosts:
-      []
+    hosts: []
       # - argocd.example.com
 
     # -- List of ingress paths for dedicated [gRPC-ingress]
@@ -1649,13 +1655,7 @@ server:
     # -- Ingress path type for dedicated [gRPC-ingress]. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
     # -- Additional ingress paths for dedicated [gRPC-ingress]
-    extraPaths:
-      []
-      # - path: /*
-      #   backend:
-      #     serviceName: ssl-redirect
-      #     servicePort: use-annotation
-      ## for Kubernetes >=1.19 (when "networking.k8s.io/v1" is used)
+    extraPaths: []
       # - path: /*
       #   pathType: Prefix
       #   backend:
@@ -1665,8 +1665,7 @@ server:
       #         name: use-annotation
 
     # -- Ingress TLS configuration for dedicated [gRPC-ingress]
-    tls:
-      []
+    tls: []
       # - secretName: your-certificate-name
       #   hosts:
       #     - argocd.example.com
@@ -1898,6 +1897,9 @@ repoServer:
   # @default -- `""` (defaults to global.logging.format)
   # logLevel: ""
 
+  # -- Annotations to be added to repo server Deployment
+  deploymentAnnotations: {}
+
   # -- Annotations to be added to repo server pods
   podAnnotations: {}
 
@@ -1981,6 +1983,23 @@ repoServer:
   #  requests:
   #    cpu: 10m
   #    memory: 64Mi
+
+  # TLS certificate configuration via Secret
+  ## Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/tls/#configuring-tls-to-argocd-repo-server
+  ## Note: Issuing certificates via cert-manager in not supported right now because it's not possible to restart repo server automatically without extra controllers.
+  certificateSecret:
+    # -- Create argocd-repo-server-tls secret
+    enabled: false
+    # -- Annotations to be added to argocd-repo-server-tls secret
+    annotations: {}
+    # -- Labels to be added to argocd-repo-server-tls secret
+    labels: {}
+    # -- Certificate authority. Required for self-signed certificates.
+    ca: ''
+    # -- Certificate private key
+    key: ''
+    # -- Certificate data. Must contain SANs of Repo service (ie: argocd-repo-server, argocd-repo-server.argo-cd.svc)
+    crt: ''
 
   ## Repo server service configuration
   service:
@@ -2093,7 +2112,7 @@ applicationSet:
   # -- Enable ApplicationSet controller
   enabled: true
 
-  # -- Application Set controller name string
+  # -- ApplicationSet controller name string
   name: applicationset-controller
 
   # -- The number of ApplicationSet controller pods to run
@@ -2117,13 +2136,13 @@ applicationSet:
 
   ## ApplicationSet controller image
   image:
-    # -- Repository to use for the application set controller
+    # -- Repository to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.repository)
     repository: ""
-    # -- Tag to use for the application set controller
+    # -- Tag to use for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.tag)
     tag: ""
-    # -- Image pull policy for the application set controller
+    # -- Image pull policy for the ApplicationSet controller
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
 
@@ -2136,12 +2155,8 @@ applicationSet:
     metricsAddr: :8080
     # -- The default health check port
     probeBindAddr: :8081
-    # -- The default leader election setting
-    enableLeaderElection: false
     # -- How application is synced between the generator and the cluster
     policy: sync
-    # -- Print debug logs
-    debug: false
     # -- Enable dry run mode
     dryRun: false
 
@@ -2152,7 +2167,7 @@ applicationSet:
   # @default -- `""` (defaults to global.logging.level)
   logLevel: ""
 
-  # -- Additional containers to be added to the applicationset controller pod
+  # -- Additional containers to be added to the ApplicationSet controller pod
   extraContainers: []
 
   ## Metrics service configuration
@@ -2192,15 +2207,15 @@ applicationSet:
       # -- Prometheus ServiceMonitor annotations
       annotations: {}
 
-  ## Application set service configuration
+  ## ApplicationSet service configuration
   service:
-    # -- Application set service annotations
+    # -- ApplicationSet service annotations
     annotations: {}
-    # -- Application set service labels
+    # -- ApplicationSet service labels
     labels: {}
-    # -- Application set service port
+    # -- ApplicationSet service port
     port: 7000
-    # -- Application set service port name
+    # -- ApplicationSet service port name
     portName: webhook
 
   serviceAccount:
@@ -2214,10 +2229,13 @@ applicationSet:
     # If not set and create is true, a name is generated using the fullname template
     name: ""
 
-  # -- Annotations for the controller pods
+  # -- Annotations to be added to ApplicationSet controller Deployment
+  deploymentAnnotations: {}
+
+  # -- Annotations for the ApplicationSet controller pods
   podAnnotations: {}
 
-  # -- Labels for the controller pods
+  # -- Labels for the ApplicationSet controller pods
   podLabels: {}
 
   # -- ApplicationSet controller container-level security context
@@ -2262,7 +2280,7 @@ applicationSet:
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
 
-  # -- Resource limits and requests for the controller pods.
+  # -- Resource limits and requests for the ApplicationSet controller pods.
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -2300,12 +2318,12 @@ applicationSet:
   # -- List of extra cli args to add
   extraArgs: []
 
-  # -- Environment variables to pass to the controller
+  # -- Environment variables to pass to the ApplicationSet controller
   extraEnv: []
     # - name: "MY_VAR"
     #   value: "value"
 
-  # -- envFrom to pass to the controller
+  # -- envFrom to pass to the ApplicationSet controller
   # @default -- `[]` (See [values.yaml])
   extraEnvFrom: []
     # - configMapRef:
@@ -2323,7 +2341,7 @@ applicationSet:
       annotations: {}
       # -- Additional ingress labels
       labels: {}
-      # -- Defines which ingress controller will implement the resource
+      # -- Defines which ingress ApplicationSet controller will implement the resource
       ingressClassName: ""
 
       # -- List of ingress hosts
@@ -2414,7 +2432,7 @@ notifications:
     # environmentName: staging
 
   secret:
-    # -- Whether helm chart creates controller secret
+    # -- Whether helm chart creates notifications controller secret
     create: true
 
     # -- key:value pairs of annotations to be added to the secret
@@ -2436,20 +2454,20 @@ notifications:
       # email-password:
         # For more information: https://argocd-notifications.readthedocs.io/en/stable/services/email/
 
-  # -- Application controller log format. Either `text` or `json`
+  # -- Notifications controller log format. Either `text` or `json`
   # @default -- `""` (defaults to global.logging.format)
   logFormat: ""
-  # -- Application controller log level. One of: `debug`, `info`, `warn`, `error`
+  # -- Notifications controller log level. One of: `debug`, `info`, `warn`, `error`
   # @default -- `""` (defaults to global.logging.level)
   logLevel: ""
 
-  # -- Extra arguments to provide to the controller
+  # -- Extra arguments to provide to the notifications controller
   extraArgs: []
 
   # -- Additional container environment variables
   extraEnv: []
 
-  # -- envFrom to pass to the controller
+  # -- envFrom to pass to the notifications controller
   # @default -- `[]` (See [values.yaml])
   extraEnvFrom: []
     # - configMapRef:
@@ -2496,6 +2514,10 @@ notifications:
       scheme: ""
       # -- Prometheus ServiceMonitor tlsConfig
       tlsConfig: {}
+      # -- Prometheus [RelabelConfigs] to apply to samples before scraping
+      relabelings: []
+      # -- Prometheus [MetricRelabelConfigs] to apply to samples before ingestion
+      metricRelabelings: []
 
   # -- Configures notification services such as slack, email or custom webhook
   # @default -- See [values.yaml]
@@ -2504,10 +2526,13 @@ notifications:
     # service.slack: |
     #   token: $slack-token
 
-  # -- Annotations to be applied to the controller Pods
+  # -- Annotations to be applied to the notifications controller Deployment
+  deploymentAnnotations: {}
+
+  # -- Annotations to be applied to the notifications controller Pods
   podAnnotations: {}
 
-  # -- Labels to be applied to the controller Pods
+  # -- Labels to be applied to the notifications controller Pods
   podLabels: {}
 
   # -- Notification controller container-level security Context
@@ -2522,10 +2547,10 @@ notifications:
       drop:
       - ALL
 
-  # -- Priority class for the controller pods
+  # -- Priority class for the notifications controller pods
   priorityClassName: ""
 
-  # -- Resource limits and requests for the controller
+  # -- Resource limits and requests for the notifications controller
   resources: {}
     # limits:
     #   cpu: 100m
@@ -2548,7 +2573,7 @@ notifications:
     # -- Labels applied to created service account
     labels: {}
   cm:
-    # -- Whether helm chart creates controller config map
+    # -- Whether helm chart creates notifications controller config map
     create: true
 
   # -- Contains centrally managed global application subscriptions
@@ -2850,7 +2875,7 @@ notifications:
         ## Has higher precedence over `notifications.bots.slack.pdb.minAvailable`
         maxUnavailable: ""
 
-      ## Slack bot imabe
+      ## Slack bot image
       image:
         # -- Repository to use for the Slack bot
         # @default -- `""` (defaults to global.image.repository)
