@@ -95,7 +95,7 @@ diagnosticMode:
 image:
   registry: docker.io
   repository: bitnami/postgresql
-  tag: 15.1.0-debian-11-r0
+  tag: 15.1.0-debian-11-r12
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -441,7 +441,9 @@ primary:
   ##
   resources:
     limits: {}
-    requests: {}
+    requests:
+      memory: 256Mi
+      cpu: 250m
   ## Pod Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ## @param primary.podSecurityContext.enabled Enable security context
@@ -475,7 +477,7 @@ primary:
   ##
   annotations: {}
   ## @param primary.podLabels Map of labels to add to the pods (postgresql primary)
-  ##postgres
+  ##
   podLabels: {}
   ## @param primary.podAnnotations Map of annotations to add to the pods (postgresql primary)
   ##
@@ -774,7 +776,11 @@ readReplicas:
   ## @param readReplicas.resources.requests.memory The requested memory for the PostgreSQL read only containers
   ## @param readReplicas.resources.requests.cpu The requested cpu for the PostgreSQL read only containers
   ##
-  resources: {}
+  resources:
+    limits: {}
+    requests:
+      memory: 256Mi
+      cpu: 250m
   ## Pod Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
   ## @param readReplicas.podSecurityContext.enabled Enable security context
@@ -1124,7 +1130,7 @@ volumePermissions:
   image:
     registry: docker.io
     repository: bitnami/bitnami-shell
-    tag: 11-debian-11-r50
+    tag: 11-debian-11-r62
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
@@ -1211,7 +1217,7 @@ metrics:
   image:
     registry: docker.io
     repository: bitnami/postgres-exporter
-    tag: 0.11.1-debian-11-r27
+    tag: 0.11.1-debian-11-r39
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
