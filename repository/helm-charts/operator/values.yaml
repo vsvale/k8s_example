@@ -62,7 +62,7 @@ console:
     labels: { }
     annotations: { }
     tls: [ ]
-    host: console.local
+    host: cluster.local
     path: /
     pathType: Prefix
   volumes: [ ]
