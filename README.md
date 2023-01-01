@@ -10,9 +10,6 @@
   - 3 worker node
   - port-foward 80 para 8081
 
-## Lite version
-- `k3d cluster create k8sexample --volume $HOME/k8sexample:/var/lib/rancher/k3s/storage@all -s 1 --servers-memory 2Gb -a 1 --agents-memory 8gb --api-port 6443 -p 8081:80@loadbalancer -p "8082:30080@agent:0"`
-
 ## Create Namespace
 - `cd ./iac/k3d && terraform init && terraform plan && terraform apply -auto-approve && cd ../.. && kubectl get ns`
 
@@ -31,7 +28,7 @@
 - metricas para promoetheus
 - 3 Broker ephemeral Kafka 3.2.3
 - Kafka connect com a image mateushenrique/owshq-kafka-connect-strimzi:3.2.3
-- Schema registry 6.1.0
+- Schema registry 6.1.9
 - Cruise control (necessario 3 brokers)
 - Kafka Connectors em repository/yamls/ingestion/connectors
 
@@ -39,7 +36,7 @@
 - Utilizando o helm chart minio/operator com valores default
 - loadbalancer para a UI (9089) do minio e para a API (8686)
 - JWT: `kubectl get secret console-sa-secret -o jsonpath="{.data.token}" -n deepstorage| base64 --decode`
-- create tenant examples3 com TLS disable
+- create tenant examples3 no ns deepstorage com TLS disable
 - download credentials
 - porta 9090 para acessar o console
 - create landing and lakehouse buckets
