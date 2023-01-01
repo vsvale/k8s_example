@@ -10,32 +10,32 @@ Image:
 storage:
   ephemeral: false  # will not allocate PVs when true
   master:
-    count: 2
+    count: 1
     size: 10Gi
     storageClass: ""
   tserver:
-    count: 2
+    count: 1
     size: 10Gi
     storageClass: ""
 
 resource:
   master:
     requests:
-      cpu: 2
-      memory: 2Gi
+      cpu: 500m
+      memory: 1Gi
     limits:
-      cpu: 2
+      cpu: 1
       memory: 2Gi
   tserver:
     requests:
-      cpu: 2
-      memory: 4Gi
+      cpu: 500m
+      memory: 3Gi
     limits:
-      cpu: 2
+      cpu: 1
       memory: 4Gi
 
 replicas:
-  master: 3
+  master: 2
   tserver: 3
 
 partition:

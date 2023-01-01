@@ -40,6 +40,7 @@
 - download credentials
 - porta 9090 para acessar o console
 - create landing and lakehouse buckets
+- create Access Key: minio miniok8sexample
 
 ## Spark
 - Utilizando spark operator com valores default
