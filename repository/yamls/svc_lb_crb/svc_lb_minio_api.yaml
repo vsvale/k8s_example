@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-lb-minio-operator
+  name: svc-lb-minio-api
   namespace: deepstorage
 spec:
   type: LoadBalancer
