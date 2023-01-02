@@ -41,7 +41,7 @@
 - porta 9090 para acessar o console
 - create landing and lakehouse buckets
 - create Access Key: minio miniok8sexample
-
+- create user: minio_user miniok8sexample
 ## Spark
 - Utilizando spark operator com valores default
 - crb para o spark operator
@@ -67,7 +67,7 @@
 - PASSWORD: admin
 - necessário criar as conexões:
   - kubernetes Connection: {"name":"kubeconnect", "in-cluster":true} 
-  - MiniO Connection: {"aws_access_key_id": "YOURACCESSKEY", "aws_secret_access_key": "YOURSECRETKEY", "endpoint_url": "http://172.19.0.3:8686"}
+  - MiniO Connection: {"aws_access_key_id": "minio", "aws_secret_access_key": "miniok8sexample", "endpoint_url": "http://172.20.0.2:8686"}
   - YugabyteDB Connection: {"name": "yugabytedb_ysql", "host": "yb-tservers.database.svc.cluster.local", "schema": "salesdw", "login": "plumber", "password": "PlumberSDE", "port": "5433"}
 - load_file do astro sdk necessitou adicionar core.enable_xcom_pickling: 'True' no values.yaml
 
@@ -117,12 +117,12 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 
 ### From Kafka to S3: Connect
 ![kafkatos3connect](imgs/kafkatos3connect.png)
-- Atraveés do Kafka connect S3 sink consumimos os dados dos tópicos, transformamos para parquet e disponibilizamos na lanzing zone no MiniO.
+- Através do Kafka connect S3 sink consumimos os dados dos tópicos, transformamos para parquet e disponibilizamos na landing zone no MiniO.
 - Os connectors sink estão disponíveis em [repository/yamls/ingestion/connectors/sink](repository/yamls/ingestion/connectors/sink)
 - É necessário alterar aws.access.key.id e aws.secret.access.key para credenciais baixadas durante a criação do tenant
 - Para ver os logs: kubectl get kafkaconnectors <nomedoconnector> -oyaml -n ingestion
 - Para pegar os nomes dos connectors: `kubectl get kafkaconnectors -n ingestion`
-- verifique no console (porta 9090) no bucket landing do Minio se os objetos foram criados
+- verifique no console (HTTP porta 9090 ou HTTPS porta 9443) no bucket landing do Minio se os objetos foram criados
 
 ![landingminiosampledb](imgs/landingminiosampledb.png)
 

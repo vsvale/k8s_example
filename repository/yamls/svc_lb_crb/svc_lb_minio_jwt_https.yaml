@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-lb-minio-ui
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout: "20"
+  namespace: deepstorage
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 9422
+    targetPort: 4222
+  selector:
+     app.kubernetes.io/instance: minio-operator
+     app.kubernetes.io/name: operator
