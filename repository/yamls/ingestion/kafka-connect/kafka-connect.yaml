@@ -9,7 +9,7 @@ metadata:
     app: edh
 spec:
   version: 3.2.3
-  replicas: 1
+  replicas: 2
   bootstrapServers: edh-kafka-bootstrap:9093
   #image: vsvale/vsvale-kafka-connect-strimzi:3.2.3
   image: mateushenrique/owshq-kafka-connect-strimzi:3.2.3
@@ -52,8 +52,8 @@ spec:
       memory: 250Mi
       cpu: 250m
     limits:
-      memory: 1Gi
-      cpu: 500m
+      memory: 2Gi
+      cpu: 1000m
   metricsConfig:
     type: jmxPrometheusExporter
     valueFrom:
