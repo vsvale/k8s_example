@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-lb-minio-ui
+  name: svc-lb-minio-jwt-https
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout: "20"
   namespace: deepstorage
