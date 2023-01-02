@@ -42,6 +42,7 @@
 - create landing and lakehouse buckets
 - create Access Key: minio miniok8sexample
 - create user: minio_user miniok8sexample
+
 ## Spark
 - Utilizando spark operator com valores default
 - crb para o spark operator
@@ -182,11 +183,7 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 ![dimproductcategory](imgs/dimproductcategory.png)
 
 ### dimproduct
-- As tabelas product, productcategory, productmodel, productmodelproductdescription e product description tem origem do banco OLTP e seus dados são extraidos via kafka connect, salvos em tópicos do Kafka para então serem extraidos novamento pelo Kafka connect e salvos em formato parquet na landing zone no object storage.
-- Utiliza dados da dimproductsubcategory
-
-
-
+- As tabelas product, productcategory, productmodel, productmodelproductdescription e product description tem origem do banco OLTP e seus dados são extraidos via kafka connect, salvos em tópicos do Kafka parayb-master-0 
 ### factinternetsalesreason
 - [Arquivo de origem](code/minio/example/dw-files/internetsalesreason/factinternetsalesreason.csv)
 - Realiza a ingestão e carga via load_file do astro sdk

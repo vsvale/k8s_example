@@ -17,9 +17,9 @@ spec:
     onSubmissionFailureRetries: 5
     onSubmissionFailureRetryInterval: 20
   hadoopConf:
-    "fs.s3a.endpoint": "http://172.19.0.2:8686"
-    "fs.s3a.access.key": "raat9cl2bEWhbgtQ"
-    "fs.s3a.secret.key": "zcJWBrrGkInYEWXf4Oc37tCIdJVeA0fb"
+    "fs.s3a.endpoint": "http://172.20.0.2:8686"
+    "fs.s3a.access.key": "minio_user"
+    "fs.s3a.secret.key": "miniok8sexample"
   driver:
     # cores: 1
     coreRequest: 250m
