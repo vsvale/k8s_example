@@ -143,13 +143,20 @@ def example_gold():
 
     @task_group()
     def factinternetsalesreason_gold():
-        sensor_landing_example_salesreason = S3KeySensor(
+#        sensor_landing_example_salesreason = S3KeySensor(
+#        task_id='t_sensor_landing_example_salesreason',
+#        bucket_name=LANDING_ZONE,
+#        bucket_key='example/dw-files/internetsalesreason/*',
+#        wildcard_match=True,
+#        timeout=18 * 60 * 60,
+#        poke_interval=120,
+#        aws_conn_id='minio')
+
+        sensor_landing_example_salesreason = S3KeySensorAsync(
         task_id='t_sensor_landing_example_salesreason',
         bucket_name=LANDING_ZONE,
         bucket_key='example/dw-files/internetsalesreason/*',
         wildcard_match=True,
-        timeout=18 * 60 * 60,
-        poke_interval=120,
         aws_conn_id='minio')
 
         loads_s3_to_yugabytedb = aql.load_file(
