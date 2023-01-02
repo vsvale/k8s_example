@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-lb-minio-minio
+  name: svc-lb-minio-console
   namespace: deepstorage
 spec:
   type: LoadBalancer
@@ -9,4 +9,6 @@ spec:
   - port: 8686
     targetPort: 9000
   selector:
+    app.kubernetes.io/instance: minio-operator-console
+    app.kubernetes.io/name: operator
     v1.min.io/tenant: examples3
