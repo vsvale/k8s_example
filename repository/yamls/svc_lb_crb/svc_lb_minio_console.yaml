@@ -1,14 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: svc-lb-minio-console
+  name: svc-lb-minio-jwt-http
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout: "20"
   namespace: deepstorage
 spec:
   type: LoadBalancer
   ports:
-  - port: 8686
-    targetPort: 9000
+  - port: 9089
+    targetPort: 9090
+  - port: 9443
+    targetPort: 9443
   selector:
-    app.kubernetes.io/instance: minio-operator-console
-    app.kubernetes.io/name: operator
-    v1.min.io/tenant: examples3
+     app.kubernetes.io/instance: minio-operator-console
+     app.kubernetes.io/name: operator
