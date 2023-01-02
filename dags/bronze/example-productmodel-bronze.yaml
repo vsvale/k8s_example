@@ -22,16 +22,16 @@ spec:
     "fs.s3a.secret.key": "miniok8sexample"
   driver:
     # cores: 1
-    coreRequest: 250m
-    coreLimit: "1200m"
-    memory: "512m"
+    coreRequest: 500m
+    coreLimit: "2200m"
+    memory: "1000m"
     labels:
       version: 3.1.1
     serviceAccount: default
   executor:
     # cores: 1
-    coreRequest: 250m
+    coreRequest: 500m
     instances: 1
-    memory: "512m"
+    memory: "1000m"
     labels:
       version: 3.1.1

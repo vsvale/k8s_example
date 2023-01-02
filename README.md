@@ -123,7 +123,7 @@ UNION SELECT 'SalesOrderHeader',count(*) from SalesLT.SalesOrderHeader;
 - É necessário alterar aws.access.key.id e aws.secret.access.key para credenciais baixadas durante a criação do tenant
 - Para ver os logs: kubectl get kafkaconnectors <nomedoconnector> -oyaml -n ingestion
 - Para pegar os nomes dos connectors: `kubectl get kafkaconnectors -n ingestion`
-- verifique no console (HTTP porta 9090 ou HTTPS porta 9443) no bucket landing do Minio se os objetos foram criados
+- verifique no console (HTTP porta 9090) no bucket landing do Minio se os objetos foram criados
 
 ![landingminiosampledb](imgs/landingminiosampledb.png)
 
