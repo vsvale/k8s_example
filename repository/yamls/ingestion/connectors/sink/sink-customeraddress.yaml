@@ -19,7 +19,7 @@ spec:
     flush.size: 500
     rotate.schedule.interval.ms: 54000
     store.url: "http://minio.deepstorage.svc.cluster.local"
-    aws.access.key.id: "minio"
+    aws.access.key.id: "minio_user"
     aws.secret.access.key: "miniok8sexample"
     storage.class: "io.confluent.connect.s3.storage.S3Storage"
     format.class: "io.confluent.connect.s3.format.parquet.ParquetFormat"
