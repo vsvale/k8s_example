@@ -10,8 +10,6 @@ spec:
   ports:
   - port: 9089
     targetPort: 9090
-  - port: 9443
-    targetPort: 9443
   selector:
      app.kubernetes.io/instance: minio-operator-console
      app.kubernetes.io/name: operator
