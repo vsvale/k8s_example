@@ -15,7 +15,7 @@ operator:
     pullPolicy: IfNotPresent
   imagePullSecrets: [ ]
   initcontainers: [ ]
-  replicaCount: 2
+  replicaCount: 1
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
@@ -58,12 +58,12 @@ console:
     runAsNonRoot: true
   ingress:
     enabled: false
-    ingressClassName: ""
     labels: { }
     annotations: { }
     tls: [ ]
     host: console.local
     path: /
-    pathType: Prefix
   volumes: [ ]
   volumeMounts: [ ]
+
+tenants: {}
